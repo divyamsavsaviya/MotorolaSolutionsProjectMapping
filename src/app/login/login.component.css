@@ -1,0 +1,15 @@
+.main-div{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box-border{
+  width: 35%;
+  align-items: center;
+}
+
+.example-full-width {
+  width: 70%;
+}
