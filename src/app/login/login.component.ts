@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormGroupDirective, NgForm, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
-import { ErrorStateMatcher } from '@angular/material/core';
 
 @Component({
   selector: 'app-login',
@@ -11,9 +10,11 @@ import { ErrorStateMatcher } from '@angular/material/core';
 })
 export class LoginComponent implements OnInit {
 
+  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  passwordFormControl = new FormControl('', Validators.required);
+
   // injection of the service into the component:
   constructor(
-    private formBuilder: FormBuilder,
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer
   ) {
@@ -25,13 +26,8 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  LoginForm !: FormGroup;
-
   ngOnInit(): void {
-    this.LoginForm = this.formBuilder.group({
-      userEmail: ['', [Validators.required, Validators.email]],
-      userPassword: ['', Validators.required]
-    })
+
   }
 
   public showPassword: boolean = false;
@@ -41,7 +37,7 @@ export class LoginComponent implements OnInit {
   }
 
   performLogin() {
-    console.log("Username " + this.LoginForm.get('userEmail')?.value +
-      " || Password " + this.LoginForm.get('userPassword')?.value);
+    console.log();
+    console.log(this.passwordFormControl);
   }
 }

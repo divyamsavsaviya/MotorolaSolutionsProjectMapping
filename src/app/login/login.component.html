@@ -7,33 +7,41 @@
             <br>
             <h1 class="md-display-3">Sign in</h1>
             <h3 class="md-headline">to Project Mapping Portal</h3>
-            <form [formGroup]="LoginForm">
-                <div>
-                    <mat-form-field floatLabel="auto" class="example-full-width" appearance="outline">
-                        <mat-label>Enter Username</mat-label>
-                        <!-- input Email -->
-                        <input formControlName="userEmail" type="email" matInput placeholder="abc@xyz.com" required
-                            name="email">
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field floatLabel="auto" class="example-full-width" 
-                        appearance="outline">
-                        <mat-label>Enter Password</mat-label>
-                        <input matInput [type]="showPassword ? 'text' : 'password'" name="password" required>
-                        <mat-icon matSuffix (click)="togglePasswordVisibility()">
-                            {{showPassword?'visibility_off':'visibility'}}
-                        </mat-icon>
-                    </mat-form-field>
-                </div>
+
+            <form class="example-form">
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Enter Username</mat-label>
+                    <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
+                    <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+                        Please enter a valid email address
+                    </mat-error>
+                    <mat-error *ngIf="emailFormControl.hasError('required')">
+                        Email is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Enter Password</mat-label>
+                    <input [type]="showPassword ? 'text' : 'password'" matInput [formControl]="passwordFormControl"
+                        placeholder="Enter Password">
+                    <mat-icon matSuffix (click)="togglePasswordVisibility()">
+                        {{showPassword?'visibility_off':'visibility'}}
+                    </mat-icon>
+                    <mat-error *ngIf="passwordFormControl.hasError('required')">
+                        Password is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
             </form>
+
             <mat-card-actions>
-                <button mat-flat-button style="width: 40%;" color="primary" (click)="performLogin()">Login
+                <button [disabled]="passwordFormControl.hasError('required') || 
+                                    emailFormControl.hasError('required') ? true : false" mat-flat-button
+                    style="width: 40%;" color="primary" (click)="performLogin()">Login
                 </button>
             </mat-card-actions>
             <!-- TODO Control Progress bar -->
             <mat-card-footer>
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <mat-progress-bar mode="determinate"></mat-progress-bar>
             </mat-card-footer>
         </mat-card>
     </div>
