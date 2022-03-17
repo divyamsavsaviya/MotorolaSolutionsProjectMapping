@@ -2,39 +2,38 @@
     <div align="center" class="box-border">
         <mat-card layout="row">
             <br>
-            <!-- TODO : SVG is'nt loading-->
-            <mat-icon svgIcon="motorola_solutions_logo"></mat-icon>
-            <h1 class="md-display-1"><strong> Cloud Infrastructure Engineering</strong></h1>
+            <mat-icon svgIcon="motorola_solutions_logo" class="logo"></mat-icon>
+            <h1 class="md-display-1">Cloud Infrastructure Engineering</h1>
             <br>
             <h1 class="md-display-3">Sign in</h1>
             <h3 class="md-headline">to Project Mapping Portal</h3>
-            <br>
-            <div class="">
+            <form [formGroup]="LoginForm">
                 <div>
-                    <mat-form-field floatLabel="auto" class="example-full-width" hideRequiredMarker="true"
-                        appearance="outline">
+                    <mat-form-field floatLabel="auto" class="example-full-width" appearance="outline">
                         <mat-label>Enter Username</mat-label>
-                        <input type="email" matInput placeholder="abc@xyz.com" required>
+                        <!-- input Email -->
+                        <input formControlName="userEmail" type="email" matInput placeholder="abc@xyz.com" required
+                            name="email">
                     </mat-form-field>
                 </div>
                 <div>
-                    <mat-form-field floatLabel="auto" class="example-full-width" hideRequiredMarker="true"
+                    <mat-form-field floatLabel="auto" class="example-full-width" 
                         appearance="outline">
                         <mat-label>Enter Password</mat-label>
                         <input matInput [type]="showPassword ? 'text' : 'password'" name="password" required>
                         <mat-icon matSuffix (click)="togglePasswordVisibility()">
                             {{showPassword?'visibility_off':'visibility'}}
                         </mat-icon>
-
                     </mat-form-field>
                 </div>
-            </div>
-            <br>
+            </form>
             <mat-card-actions>
-                <button mat-flat-button style="width: 40%;" color="primary">Login</button>
+                <button mat-flat-button style="width: 40%;" color="primary" (click)="performLogin()">Login
+                </button>
             </mat-card-actions>
+            <!-- TODO Control Progress bar -->
             <mat-card-footer>
-                <mat-progress-bar mode="determinate"></mat-progress-bar>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             </mat-card-footer>
         </mat-card>
     </div>
