@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormGroupDirective, NgForm, FormControl } from '@angular/forms';
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
-import { ErrorStateMatcher } from '@angular/material/core';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +29,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.LoginForm = this.formBuilder.group({
       userEmail: ['', [Validators.required, Validators.email]],
-      userPassword: ['', Validators.required]
+      userPassword: ['', [Validators.required, Validators.minLength(8)]]
     })
   }
 
@@ -40,8 +39,9 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+  showProgressBar = false
   performLogin() {
-    console.log("Username " + this.LoginForm.get('userEmail')?.value +
-      " || Password " + this.LoginForm.get('userPassword')?.value);
+    this.showProgressBar = true;
+    // console.log(this.LoginForm.value);
   }
 }
