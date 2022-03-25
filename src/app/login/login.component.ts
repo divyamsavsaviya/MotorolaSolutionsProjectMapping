@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormGroupDirective, NgForm, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 
@@ -10,10 +10,13 @@ import { DomSanitizer } from "@angular/platform-browser";
 })
 export class LoginComponent implements OnInit {
 
+  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  passwordFormControl = new FormControl('', Validators.required);
+
   // injection of the service into the component:
   constructor(
-    private formBuilder: FormBuilder,
     private matIconRegistry: MatIconRegistry,
+    private formBuilder : FormBuilder,
     private domSanitizer: DomSanitizer
   ) {
     // register our custom "motorola_solutions_logo" icon
