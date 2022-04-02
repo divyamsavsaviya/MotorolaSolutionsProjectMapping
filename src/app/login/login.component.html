@@ -11,25 +11,31 @@
 
                 <!-- login Email -->
                 <div>
-                    <mat-form-field floatLabel="auto" class="example-full-width" appearance="outline" hideRequiredMarker>
+                    <mat-form-field floatLabel="auto" class="example-full-width" appearance="outline"
+                        hideRequiredMarker>
                         <mat-label>Enter Email</mat-label>
-                        <input formControlName="userEmail" type="email" matInput placeholder="abc@xyz.com" required
-                            name="email"  >
+                        <input formControlName="email" type="email" matInput placeholder="abc@xyz.com" required
+                            name="email">
                         <mat-icon matSuffix>email</mat-icon>
-                        <mat-error *ngIf="LoginForm.controls['userEmail'].hasError('required')">Email is <strong>required</strong></mat-error>
-                        <mat-error *ngIf="LoginForm.controls['userEmail'].hasError('email') && !LoginForm.controls['userEmail'].hasError('required')">please Enter a valid email address</mat-error>
+                        <mat-error *ngIf="LoginForm.controls['email'].hasError('required')">Email is
+                            <strong>required</strong></mat-error>
+                        <mat-error
+                            *ngIf="LoginForm.controls['email'].hasError('email') && !LoginForm.controls['email'].hasError('required')">
+                            please Enter a valid email address</mat-error>
                     </mat-form-field>
                 </div>
                 <!-- login Password -->
                 <div>
-                    <mat-form-field floatLabel="auto" class="example-full-width" appearance="outline" hideRequiredMarker>
+                    <mat-form-field floatLabel="auto" class="example-full-width" appearance="outline"
+                        hideRequiredMarker>
                         <mat-label>Enter Password</mat-label>
-                        <input matInput formControlName="userPassword" [type]="showPassword ? 'text' : 'password'"
+                        <input matInput formControlName="password" [type]="showPassword ? 'text' : 'password'"
                             name="password" required hideRequiredMarker>
                         <mat-icon matSuffix (click)="togglePasswordVisibility()">
                             {{showPassword?'visibility':'visibility_off'}}
                         </mat-icon>
-                        <mat-error *ngIf="LoginForm.controls['userPassword'].hasError('required')">Password is <strong>required</strong></mat-error>
+                        <mat-error *ngIf="LoginForm.controls['password'].hasError('required')">Password is
+                            <strong>required</strong></mat-error>
                     </mat-form-field>
                 </div>
             </form>
@@ -41,7 +47,7 @@
             </mat-card-actions>
             <!-- TODO Control Progress bar -->
             <mat-card-footer>
-                <mat-progress-bar [mode]="showProgressBar ? 'indeterminate' : 'determinate'" ></mat-progress-bar>
+                <mat-progress-bar [mode]="showProgressBar ? 'indeterminate' : 'determinate'"></mat-progress-bar>
             </mat-card-footer>
         </mat-card>
     </div>

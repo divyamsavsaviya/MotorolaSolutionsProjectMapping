@@ -1,4 +1,5 @@
 .main-div{
+  background:linear-gradient(90deg,#09c6f9,#045de9);
   height: 100vh;
   display: flex;
   justify-content: center;

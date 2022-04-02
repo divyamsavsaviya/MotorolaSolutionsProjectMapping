@@ -1,7 +1,11 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
 import { MatIconRegistry } from "@angular/material/icon";
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from "@angular/platform-browser";
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +21,10 @@ export class LoginComponent implements OnInit {
   constructor(
     private matIconRegistry: MatIconRegistry,
     private formBuilder : FormBuilder,
-    private domSanitizer: DomSanitizer
+    private _snackBar: MatSnackBar,
+    private domSanitizer: DomSanitizer,
+    private authService: AuthService,
+    private router: Router,
   ) {
     // register our custom "motorola_solutions_logo" icon
     this.matIconRegistry.addSvgIcon(
@@ -31,8 +38,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.LoginForm = this.formBuilder.group({
-      userEmail: ['', [Validators.required, Validators.email]],
-      userPassword: ['', [Validators.required, Validators.minLength(8)]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     })
   }
 
@@ -42,9 +49,25 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
+
   showProgressBar = false
   performLogin() {
     this.showProgressBar = true;
-    // console.log(this.LoginForm.value);
+    const {email, password} = this.LoginForm.value;
+    this.authService.loginEmployee({email, password}).subscribe( 
+      res => {
+        this.LoginForm.disable();
+        this.authService.setToken(res.accessToken);
+        this.router.navigate(['/dashBoard']);
+      },
+      err => {
+        this.openSnackBar(err.error.error , "try again");
+        this.LoginForm.reset();
+        this.showProgressBar = false;
+      }
+    );
   }
 }
