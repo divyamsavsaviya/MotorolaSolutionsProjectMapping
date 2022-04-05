@@ -40,8 +40,9 @@ export class DashBoardComponent implements OnInit {
   logout() {
     this.authService.logout();
   }
-
-  openProfileDialog(){
-
+  
+  sideBarOpen = true;
+  sideBarToggler(){
+    this.sideBarOpen = !this.sideBarOpen;
   }
 }

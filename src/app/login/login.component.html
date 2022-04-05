@@ -18,7 +18,8 @@
                             name="email">
                         <mat-icon matSuffix>email</mat-icon>
                         <mat-error *ngIf="LoginForm.controls['email'].hasError('required')">Email is
-                            <strong>required</strong></mat-error>
+                            <strong>required</strong>
+                        </mat-error>
                         <mat-error
                             *ngIf="LoginForm.controls['email'].hasError('email') && !LoginForm.controls['email'].hasError('required')">
                             please Enter a valid email address</mat-error>
@@ -35,7 +36,11 @@
                             {{showPassword?'visibility':'visibility_off'}}
                         </mat-icon>
                         <mat-error *ngIf="LoginForm.controls['password'].hasError('required')">Password is
-                            <strong>required</strong></mat-error>
+                            <strong>required</strong>
+                        </mat-error>
+                        <mat-error *ngIf="LoginForm.controls['password'].hasError('invalid_p')">Password is
+                            <strong>required</strong>
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </form>

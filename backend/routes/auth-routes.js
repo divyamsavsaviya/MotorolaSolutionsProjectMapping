@@ -4,30 +4,29 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {jwtTokens} = require('../utils/jwt-helpers.js');
 const { authenticateToken } = require('../middleware/authorization.js');
-const CryptoJs = require('crypto-js')
+// const CryptoJs = require('crypto-js')
 // import * as CryptoJs from 'crypto-js';
 
 const router = express.Router();
 
 router.post('/login' ,async (req, res) => {
     try {
-        // const {emailCipher, passwordCipher} = req.body;
-        // const email = CryptoJs.AES.encrypt(JSON.stringify(emailCipher),'123').toString;
-        // const password = CryptoJs.AES.encrypt(JSON.stringify(passwordCipher),'123').toString;
-        // const {emailCipher, passwordCipher} = req.body;
         const {email, password} = req.body;
+
+        // decrypt data
+        // const {emailCipher, passwordCipher} = req.body;
         // decrypt emailCipher & passwordCipher
         // var emailBytes  = CryptoJs.AES.decrypt(emailCipher,'123'); 
         // var passwordBytes  = CryptoJs.AES.decrypt(passwordCipher, '123');
         // var email = emailBytes.toString(CryptoJS.enc.Utf8);
         // var password = passwordBytes.toString(CryptoJS.enc.Utf8);
-        // console.log("og text => " + email + "  " + password);
+        
         const employees = await pool.query('SELECT * FROM public.employees WHERE email = $1',[email]);
         // check is Employee exists
-        if(employees.rows.length === 0) return res.status(401).json({error : "Email is incorrect"});
+        if(employees.rows.length === 0) return res.status(401).json({error : "Email is incorrect" , errorType : "invalid_email"});
         // validate password
         const validPassword = await bcrypt.compare(password , employees.rows[0].password); 
-        if(!validPassword) return res.status(401).json({error : "Password is incorrect"});
+        if(!validPassword) return res.status(401).json({error : "Password is incorrect",errorType : "invalid_email"});
         // JWT
         let tokens = jwtTokens(employees.rows[0]);
         res.cookie('refresh_token' , tokens.refreshToken,{httpOnly : true});
