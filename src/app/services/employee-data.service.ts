@@ -12,6 +12,6 @@ export class EmployeeDataService {
   ) { }
 
   getEmployees() {
-    return this.http.get(this.apiURL);
+    return this.http.get<any>(this.apiURL);
   }
 }

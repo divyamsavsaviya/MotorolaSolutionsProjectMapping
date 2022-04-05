@@ -10,7 +10,8 @@ export class AuthService {
   private apiURL = 'http://localhost:3000/api'
   constructor(
     private http: HttpClient,
-    private router: Router,) { }
+    private router: Router,
+  ) { }
 
   // loginData => {email , password}
   loginEmployee(loginData: any) {
@@ -19,20 +20,26 @@ export class AuthService {
 
   loggedIn() {
     // token exists ? true : false
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem('access_token');
   }
 
   // remove token from localStorage
   logout() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     this.router.navigate(['/login']);
   }
 
-  setToken(token: any) {
-    localStorage.setItem('token', token);
+  setTokens(tokens: any) {
+    localStorage.setItem('access_token', tokens.accessToken);
+    localStorage.setItem('refresh_token', tokens.refreshToken);
   }
 
-  getToken() {
-    return localStorage.getItem('token');
+  getAccessToken() {
+    return localStorage.getItem('access_token');
+  }
+
+  getRefreshToken() {
+    return localStorage.getItem('refresh_token');
   }
 }

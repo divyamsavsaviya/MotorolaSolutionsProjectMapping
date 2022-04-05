@@ -19,6 +19,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthGuard } from './guards/auth.guard';
 import { TokenInterceptorService } from './services/token-interceptor.service';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { TokenInterceptorService } from './services/token-interceptor.service';
     HttpClientModule,
     ReactiveFormsModule,
     MatSnackBarModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatMenuModule,
+    MatSidenavModule
   ],
   providers: [AuthGuard , 
   {

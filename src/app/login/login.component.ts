@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import * as CryptoJs from 'crypto-js';
 
 @Component({
   selector: 'app-login',
@@ -57,10 +58,15 @@ export class LoginComponent implements OnInit {
   performLogin() {
     this.showProgressBar = true;
     const {email, password} = this.LoginForm.value;
-    this.authService.loginEmployee({email, password}).subscribe( 
+    // TODO - encrypt data
+    const emailCipher = CryptoJs.AES.encrypt(JSON.stringify(email),'123').toString();
+    const passwordCipher = CryptoJs.AES.encrypt(JSON.stringify(password),'123').toString();
+    this.authService.loginEmployee({emailCipher, passwordCipher}).subscribe( 
+    // this.authService.loginEmployee({email, password}).subscribe( 
+      // here response contains tokens => accessToken & refreshToken
       res => {
         this.LoginForm.disable();
-        this.authService.setToken(res.accessToken);
+        this.authService.setTokens(res);
         this.router.navigate(['/dashBoard']);
       },
       err => {

@@ -3,13 +3,25 @@ const pool = require('../db.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {jwtTokens} = require('../utils/jwt-helpers.js');
-const { authenticateToken } = require('../middleware/authorization.js')
+const { authenticateToken } = require('../middleware/authorization.js');
+const CryptoJs = require('crypto-js')
+// import * as CryptoJs from 'crypto-js';
 
 const router = express.Router();
 
 router.post('/login' ,async (req, res) => {
     try {
+        // const {emailCipher, passwordCipher} = req.body;
+        // const email = CryptoJs.AES.encrypt(JSON.stringify(emailCipher),'123').toString;
+        // const password = CryptoJs.AES.encrypt(JSON.stringify(passwordCipher),'123').toString;
+        // const {emailCipher, passwordCipher} = req.body;
         const {email, password} = req.body;
+        // decrypt emailCipher & passwordCipher
+        // var emailBytes  = CryptoJs.AES.decrypt(emailCipher,'123'); 
+        // var passwordBytes  = CryptoJs.AES.decrypt(passwordCipher, '123');
+        // var email = emailBytes.toString(CryptoJS.enc.Utf8);
+        // var password = passwordBytes.toString(CryptoJS.enc.Utf8);
+        // console.log("og text => " + email + "  " + password);
         const employees = await pool.query('SELECT * FROM public.employees WHERE email = $1',[email]);
         // check is Employee exists
         if(employees.rows.length === 0) return res.status(401).json({error : "Email is incorrect"});
@@ -26,7 +38,7 @@ router.post('/login' ,async (req, res) => {
 });
 
 // using refresh token to get new access token & new refresh token
-router.get('/refresh_token', (req, res) => {
+router.get('/refresh_token', authenticateToken ,(req, res) => {
     try {
         const refreshToken = req.cookies.refresh_token;
         if(refreshToken === null) return res.status(401).json({error : "Null refresh token"});
@@ -41,25 +53,13 @@ router.get('/refresh_token', (req, res) => {
     }
 })
 
-router.delete('/refresh_token',(req, res) => {
+router.delete('/refresh_token', authenticateToken ,(req, res) => {
     try {
         res.clearCookie('refresh_token');
         return res.status(200).json({message : 'refresh token deleted'})
     } catch (error) {
         res.status(401).send({ error: error.message });
     }
-})
-
-router.get('/decode_token',(req, res) => {
-    try {
-        const accessToken = req.cookies.accessToken;
-        if(accessToken === null) return res.status(401).json({error : "Null access token"});
-        const data = jwt.decode(accessToken);
-        res.json(data);
-    } catch (error) {
-        res.status(401).send({ error: error.message });
-    }
-
 })
 
 module.exports = router;
