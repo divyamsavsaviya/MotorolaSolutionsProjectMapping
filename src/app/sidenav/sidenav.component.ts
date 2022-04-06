@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PayloadService } from '../services/payload.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -7,8 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SidenavComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private payloadService : PayloadService,
+  ) { }
 
+  name = this.payloadService.getEmployeeName();
   ngOnInit(): void {
   }
 

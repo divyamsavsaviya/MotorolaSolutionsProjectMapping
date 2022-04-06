@@ -1,14 +1,13 @@
 <mat-nav-list>
-    <mat-divider></mat-divider>
-    <h2 class="mat-subheader">Applications</h2>
-    <a mat-list-item routerLink="/home" routerLinkActive="list-item-active" href="">
-        <mat-icon>home</mat-icon> Home
+    <h1 class="mat-subheader">Hello {{name}}</h1>
+    <h2 class="mat-subheader">User Management</h2>
+    <div >
+        <a mat-list-item routerLink="dashBoard/userManagement" routerLinkActive="list-item-active" >
+            <mat-icon>manage_accounts</mat-icon> User Management
+        </a>
+    </div>
+    <h2 class="mat-subheader">Project Management</h2>
+    <a mat-list-item routerLink="dashBoard/projectManagement" routerLinkActive="list-item-active" href="">
+        <mat-icon>source</mat-icon> Project Management
     </a>
-    <a mat-list-item routerLink="/dashboard" routerLinkActive="list-item-active" href="">
-        <mat-icon>dashboard</mat-icon> Dashboard
-    </a>
-    <a mat-list-item ><mat-icon>edit</mat-icon> Link 3</a>
-    <a mat-list-item ><mat-icon>edit</mat-icon> Link 4</a>
-    <a mat-list-item ><mat-icon>edit</mat-icon> Link 5</a>
-    <a mat-list-item ><mat-icon>edit</mat-icon> Link 6</a>
 </mat-nav-list>

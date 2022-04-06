@@ -24,13 +24,18 @@ import { TokenInterceptorService } from './services/token-interceptor.service';
 import {MatMenuModule} from '@angular/material/menu';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { HeaderComponent } from './header/header.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { ProjectManagementComponent } from './project-management/project-management.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     routingComponents,
     SidenavComponent,
-    HeaderComponent
+    HeaderComponent,
+    UserManagementComponent,
+    ProjectManagementComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,6 +55,7 @@ import { HeaderComponent } from './header/header.component';
     MatSidenavModule,
     MatDividerModule,
     MatListModule,
+    MatDialogModule,
   ],
   providers: [AuthGuard , 
   {

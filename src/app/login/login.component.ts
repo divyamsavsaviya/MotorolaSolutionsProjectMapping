@@ -1,5 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { invalid } from '@angular/compiler/src/render3/view/util';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
 import { MatIconRegistry } from "@angular/material/icon";
@@ -22,7 +20,7 @@ export class LoginComponent implements OnInit {
   // injection of the service into the component:
   constructor(
     private matIconRegistry: MatIconRegistry,
-    private formBuilder : FormBuilder,
+    private formBuilder: FormBuilder,
     private _snackBar: MatSnackBar,
     private domSanitizer: DomSanitizer,
     private authService: AuthService,
@@ -60,14 +58,14 @@ export class LoginComponent implements OnInit {
     this.LoginForm.controls['password'].disable();
     this.LoginForm.controls['email'].disable();
     this.showProgressBar = true;
-    const {email, password} = this.LoginForm.value;
+    const { email, password } = this.LoginForm.value;
 
     // TODO - encrypt data
     // const emailCipher = CryptoJs.AES.encrypt(JSON.stringify(email),'123').toString();
     // const passwordCipher = CryptoJs.AES.encrypt(JSON.stringify(password),'123').toString();
     // this.authService.loginEmployee({emailCipher, passwordCipher}).subscribe( 
-      
-    this.authService.loginEmployee({email, password}).subscribe( 
+
+    this.authService.loginEmployee({ email, password }).subscribe(
       // here response contains tokens => accessToken & refreshToken
       res => {
         this.authService.setTokens(res);
@@ -75,11 +73,11 @@ export class LoginComponent implements OnInit {
       },
       err => {
         this.LoginForm.controls['password'].enable();
-    this.LoginForm.controls['email'].enable();
-        if(err.error.errorType === 'invalid_email') {
+        this.LoginForm.controls['email'].enable();
+        if (err.error.errorType === 'invalid_email') {
           this.LoginForm.controls['password'].setValue("");
         }
-        this.openSnackBar(err.error.error , "try again");
+        this.openSnackBar(err.error.error, "try again");
         this.showProgressBar = false;
       }
     );

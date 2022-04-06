@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { EmployeeDataService } from '../services/employee-data.service';
+import { PayloadService } from '../services/payload.service';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dash-board',
@@ -15,26 +17,12 @@ export class DashBoardComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private employeeService: EmployeeDataService,
+    private payloadService: PayloadService,
     private router: Router,
+    private dialog : MatDialog,
   ) { }
 
   ngOnInit(): void {
-  }
-
-  logEmployees() {
-    let employees: any;
-    this.employeeService.getEmployees().subscribe(
-      res => {
-        employees = res
-      },
-      err => { 
-        if(err instanceof HttpErrorResponse) {
-          if(err.status === 401) {
-            this.authService.logout();
-          }
-        }
-      },
-    )
   }
 
   logout() {
@@ -44,5 +32,15 @@ export class DashBoardComponent implements OnInit {
   sideBarOpen = true;
   sideBarToggler(){
     this.sideBarOpen = !this.sideBarOpen;
+  }
+
+  getEmployeeInformation() {
+    const email = this.payloadService.getEmployeeEmail();
+    this.employeeService.getEmployeData(email).subscribe({
+      next:(res) => {
+        console.log(res);
+      }
+    }
+    )
   }
 }

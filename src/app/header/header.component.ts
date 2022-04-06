@@ -7,7 +7,8 @@ import { Component, OnInit, Output , EventEmitter } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
   @Output() logoutForMe : EventEmitter<any> = new EventEmitter();
-  @Output() toogleSidebarForMe : EventEmitter<any> = new EventEmitter();
+  @Output() toggleSidebarForMe : EventEmitter<any> = new EventEmitter();
+  @Output() openProfileForMe : EventEmitter<any> = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
@@ -17,7 +18,11 @@ export class HeaderComponent implements OnInit {
     this.logoutForMe.emit();
   }
 
+  openProfile() {
+    this.openProfileForMe.emit();
+  }
+
   toggleSidebar() {
-    this.toogleSidebarForMe.emit();
+    this.toggleSidebarForMe.emit();
   }
 }
