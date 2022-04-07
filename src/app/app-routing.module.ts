@@ -23,11 +23,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'dashBoard/userManagement',
+        path: 'userManagement',
         component: UserManagementComponent,
       },
       {
-        path: 'dashBoard/projectManagement',
+        path: 'projectManagement',
         component: ProjectManagementComponent,
       }
     ]

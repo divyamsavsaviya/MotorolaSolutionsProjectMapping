@@ -21,7 +21,7 @@ router.post('/login' ,async (req, res) => {
         // var email = emailBytes.toString(CryptoJS.enc.Utf8);
         // var password = passwordBytes.toString(CryptoJS.enc.Utf8);
         
-        const employees = await pool.query('SELECT * FROM public.employees WHERE email = $1',[email]);
+        const employees = await pool.query('SELECT * FROM public.users WHERE email = $1',[email]);
         // check is Employee exists
         if(employees.rows.length === 0) return res.status(401).json({error : "Email is incorrect" , errorType : "invalid_email"});
         // validate password

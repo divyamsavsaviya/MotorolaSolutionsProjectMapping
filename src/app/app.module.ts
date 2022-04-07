@@ -17,6 +17,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
+import {MatTableModule} from '@angular/material/table';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthGuard } from './guards/auth.guard';
@@ -27,6 +28,10 @@ import { HeaderComponent } from './header/header.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { ProjectManagementComponent } from './project-management/project-management.component';
+import { UserTableComponent } from './user-table/user-table.component';
+import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.component';
+import {MatSelectModule} from '@angular/material/select';
+import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +41,9 @@ import { ProjectManagementComponent } from './project-management/project-managem
     HeaderComponent,
     UserManagementComponent,
     ProjectManagementComponent,
+    UserTableComponent,
+    AddUserDialogComponent,
+    EditUserDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +64,8 @@ import { ProjectManagementComponent } from './project-management/project-managem
     MatDividerModule,
     MatListModule,
     MatDialogModule,
+    MatTableModule,
+    MatSelectModule,
   ],
   providers: [AuthGuard , 
   {

@@ -1,0 +1,68 @@
+<div>
+  <h2 mat-dialog-title>Add User</h2>
+  <div mat-dialog-content>
+
+    <div class="example-container">
+      <form [formGroup]="addUserForm">
+        <!-- ID -->
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Enter ID</mat-label>
+          <input formControlName="id" matInput placeholder="Enter Id">
+        </mat-form-field>
+
+         <!-- Name -->
+         <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Enter Name</mat-label>
+          <input formControlName="name" matInput placeholder="Enter Id">
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Enter Email</mat-label>
+          <input formControlName="email" matInput placeholder="abc@xyz.com">
+          <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field class="example-full-width" *ngIf="!showPassword" appearance="outline">
+          <mat-label>Enter password </mat-label>
+          <input [attr.disabled]="disable" formControlName="password" matInput [type]="hide ? 'password' : 'text'" *ngIf="!showPassword">
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" *ngIf="!showPassword"
+            [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- Role -->
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Choose Role</mat-label>
+          <mat-select formControlName="role" required>
+            <mat-option>--</mat-option>
+            <mat-option *ngFor="let role of roles" [value]="role">
+              {{role}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="addUserForm.controls['role'].hasError('required')">Please choose a role</mat-error>
+        </mat-form-field>
+
+        <!-- Team -->
+        <!-- <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Choose Team</mat-label>
+              <mat-select formControlName="team" required>
+                <mat-option>--</mat-option>
+                <mat-option *ngFor="let team of teams" [value]="team">
+                  {{team}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="addUserForm.controls['team'].hasError('required')">Please choose a team</mat-error>
+            </mat-form-field> -->
+      </form>
+    </div>
+
+  </div>
+  <div mat-dialog-actions [align]="'end'">
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-raised-button color="primary" [disabled]="!addUserForm.valid" (click)="addUser()">{{actionBtn}}</button>
+  </div>
+
+</div>

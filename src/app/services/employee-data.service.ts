@@ -14,4 +14,16 @@ export class EmployeeDataService {
   getEmployeData(email : any) {
     return this.http.post<any>(this.apiURL + '/getEmployeeInformation',email);
   }
+
+  getEmployee() {
+    return this.http.get<any>(this.apiURL);
+  }
+
+  addEmployee(employee : any) {
+    return this.http.post<any>(this.apiURL + '/',employee);
+  }
+
+  updateEmployee(employee : any) {
+    return this.http.put<any>(this.apiURL + '/',employee);
+  }
 }

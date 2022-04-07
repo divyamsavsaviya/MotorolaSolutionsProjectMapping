@@ -1,0 +1,31 @@
+table {
+    width: 100%;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .td, th {
+    width: 25%;
+  }
+  
+.container {
+    width: 70%;
+    margin: 0 auto;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+
+    color: black !important;
+   }
+  
+   ::ng-deep.mat-form-field-underline {
+
+    background-color: black !important;
+  } 
+  
+  ::ng-deep.mat-form-field-ripple {
+   background-color: black !important;;
+  }

@@ -1,0 +1,28 @@
+<div>
+    <h2 mat-dialog-title>Edit Role User</h2>
+    <div mat-dialog-content>
+
+        <div class="example-container">
+            <form [formGroup]="editUserForm">
+                <!-- Role -->
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Choose Role</mat-label>
+                    <mat-select formControlName="role" required>
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let role of roles" [value]="role">
+                            {{role}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="editUserForm.controls['role'].hasError('required')">Please choose a role
+                    </mat-error>
+                </mat-form-field>
+            </form>
+        </div>
+
+    </div>
+    <div mat-dialog-actions [align]="'end'">
+        <button mat-button mat-dialog-close>Close</button>
+        <button mat-raised-button color="primary" [disabled]="!editUserForm.valid" (click)="editUSer()">Update</button>
+    </div>
+
+</div>
