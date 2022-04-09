@@ -5,16 +5,8 @@ const { authenticateToken } = require('../middleware/authorization.js')
 
 const router = express.Router()
 
-router.get('/', async (req, res) => {
-    try {
-        employees = await pool.query('SELECT id, email, name, role FROM public.users;');
-        res.json({ employees: employees.rows });
-    } catch (error) {
-        res.status(500).send({ error: error.message });
-    }
-})
-
-router.post('/', authenticateToken, async (req, res) => {
+// Add employee
+router.post('/', authenticateToken , async (req, res) => {
     try {
         const { email, password, name, role, id } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -23,27 +15,20 @@ router.post('/', authenticateToken, async (req, res) => {
             [email, hashedPassword, name, role, id]);
         res.json({ employees: newEmployee.rows[0] });
     } catch (error) {
-        res.status(401).send({ error: error.message });
+
+        if (error.constraint === 'employees_pkey') {
+            res.status(401).send({ error: "User already exists!", errorType: 'user_exists' });
+            console.log(error.message);
+        } else {
+            res.status(401).send({ error: error.message });
+        }
     }
 })
 
-router.post('/getEmployeeInformation', authenticateToken, async (req, res) => {
+// get employees list
+router.get('/', authenticateToken , async (req, res) => {
     try {
-        employee = await pool.query('SELECT email, name, role FROM public.users WHERE email=($1)',
-            [req.body.email]);
-        console.log(employee.rows[0]);
-        res.json(employee.rows[0]);
-    } catch (error) {
-        res.send({ error: error.message });
-    }
-})
-
-router.put('/', async (req, res) => {
-    const { email, name, role, id } = req.body;
-    try {
-        employees = await pool.query(
-            'UPDATE public.users SET email=($1), name=($2), role=($3), id=($4) WHERE email=$1'
-            [email, password, name, role, id]);
+        employees = await pool.query('SELECT id, email, name, role FROM public.users;');
         res.json({ employees: employees.rows });
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -51,6 +36,71 @@ router.put('/', async (req, res) => {
 })
 
 
+// return employee information
+router.get('/getEmployeeInformation', authenticateToken , async (req, res) => {
+    try {
+        const { id } = req.body;
+        const employee = await pool.query('SELECT email, name, role FROM public.users WHERE id=($1)',
+            [id]);
+        if (employee.rows.length === 1) {
+            return res.json(employee.rows[0]);
+        } else {
+            res.status(400).json({ message: "User Not exists!" });
+        }
+    } catch (error) {
+        res.send({ error: error.message });
+    }
+})
 
+// updates employee email
+router.put('/updateEmail', authenticateToken ,async (req, res) => {
+    const { email, id } = req.body;
+    try {
+        await pool.query('UPDATE public.users SET email=($1) WHERE id=($2);',
+            [email, id]);
+    } catch (error) {
+        if (error.constraint === 'employees_pkey') {
+            res.status(401).send({ error: "User exists with email " + email, errorType: 'invalid_email' });
+        } else {
+            res.status(401).send({ error: error.message });
+        }
+    }
+})
+
+// updates employee role
+router.put('/updateRole', authenticateToken ,async (req, res) => {
+    const { role, id } = req.body;
+    try {
+        employee = await pool.query('UPDATE public.users SET role=($1) WHERE id=($2);',
+            [role, id]);
+        res.json("Role Updated Successfully!");
+    } catch (error) {
+        res.send({ error: error.message });
+    }
+})
+
+// update employee name
+router.put('/updateName', authenticateToken , async (req, res) => {
+    const { name, id } = req.body;
+    try {
+        employee = await pool.query('UPDATE public.users SET name=($1) WHERE id=($2);',
+            [name, id]);
+        res.json("Name Updated Successfully!");
+    } catch (error) {
+        res.send({ error: error.message });
+    }
+})
+
+// removes employee
+router.delete('/removeEmployee', authenticateToken ,async (req, res) => {
+    const { id } = req.body;
+    try {
+        employee = await pool.query('DELETE FROM public.users WHERE id=($1);',
+            [id]);
+        res.json("Removed Employee Successfully!");
+    } catch (error) {
+        res.send({ error: error.message });
+    }
+})
 
 module.exports = router;

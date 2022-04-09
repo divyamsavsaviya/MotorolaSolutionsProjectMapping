@@ -21,6 +21,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/api/employees',employeesRouter);
 app.use('/api/auth',authRouter);
+app.use('/api/projects',authRouter);
 
 
 /*assuming an express app is declared here*/

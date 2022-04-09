@@ -61,22 +61,20 @@ export class UserTableComponent implements OnInit {
   }
 
   deleteUser(id : number){
-    // this.employeeService.deleteUser(id)
-    // .subscribe({
-    //   next:(res)=>{
-    //     alert("User deleted successfully");
-    //     this.getUsers(); 
-    //   },
-    //   error:()=>{
-    //     alert("error while deleting data"); 
-    //   }
-    // })
+    this.employeeService.deleteUser({id})
+    .subscribe({
+      next:(res)=>{
+        console.log("Deleted user id " +id);
+      },
+      error:(err)=>{
+        console.log(err.message);
+      }
+    })
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }

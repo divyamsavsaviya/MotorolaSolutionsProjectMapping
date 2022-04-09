@@ -24,6 +24,10 @@ export class EmployeeDataService {
   }
 
   updateEmployee(employee : any) {
-    return this.http.put<any>(this.apiURL + '/',employee);
+    return this.http.put<any>(this.apiURL,employee);
+  }
+
+  deleteUser(id : any) {
+    return this.http.delete<any>(this.apiURL ,id);
   }
 }

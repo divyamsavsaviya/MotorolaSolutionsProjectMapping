@@ -76,12 +76,10 @@ export class AddUserDialogComponent implements OnInit {
   updateUser() {
     this.employeeService.updateEmployee(this.addUserForm.value).subscribe({
       next:(res)=>{
-        alert("User updated successfully");
         this.addUserForm.reset();
         this.dialogRef.close('update');
       },
       error:(error)=>{
-        alert("Error while updating user");
         console.error(error.message);
       }
     })
