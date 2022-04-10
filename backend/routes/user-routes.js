@@ -15,7 +15,6 @@ router.post('/', authenticateToken , async (req, res) => {
             [email, hashedPassword, name, role, id]);
         res.json({ employees: newEmployee.rows[0] });
     } catch (error) {
-
         if (error.constraint === 'employees_pkey') {
             res.status(401).send({ error: "User already exists!", errorType: 'user_exists' });
             console.log(error.message);
@@ -29,6 +28,7 @@ router.post('/', authenticateToken , async (req, res) => {
 router.get('/', authenticateToken , async (req, res) => {
     try {
         employees = await pool.query('SELECT id, email, name, role FROM public.users;');
+        if(employees.rows.length === 0) return res.json({ message: 'No users Found'});
         res.json({ employees: employees.rows });
     } catch (error) {
         res.status(500).send({ error: error.message });

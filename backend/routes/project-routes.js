@@ -4,27 +4,120 @@ const { authenticateToken } = require('../middleware/authorization.js')
 
 const router = express.Router()
 
-router.get('/' , async (req, res) => {
-    console.log("api/projects/");
+// Add Project [post]
+router.post('/', async (req, res) => {
     try {
-        project = await pool.query(
-            'SELECT * FROM public.projects;');
-            res.json({ projects: projects.rows });
+        const {
+            id,
+            projectname,
+            deptcode,
+            users,
+            status,
+            cieareaid,
+            financeproductid
+        } = req.body;
+
+        const projectInsertQuery =
+            'INSERT INTO public.projects(id, projectname, deptcode, users, status, createdat, updatedat, cieareaid, financeproductid) VALUES ($1,$2,$3,$4,$5,Now(),Now(),$6,$7);';
+        const newProject = await pool.query(
+            projectInsertQuery,
+            [id, projectname, deptcode, users, status, cieareaid, financeproductid]);
+        res.json({ message: "Project Added Successfully!" });
     } catch (error) {
-        res.status(500).send({ error: error.message });
+        if (error.constraint === 'projects_pkey') {
+            res.status(401).send({ error: "Project already exists!", errorType: 'project_exists' });
+        } else {
+            res.status(401).send({ error: error.message });
+        }
     }
 })
 
-router.post('/', async (req, res) => {
+// get project list [get]
+router.get('/', async (req, res) => {
     try {
-        const { id, projectName, deptCode, users, status, createdAt, updateAt, cieAreaId, financeProductId } = req.body;
-        const newProject = await pool.query(
-            'INSERT INTO public.projects(id, "projectName", "deptCode", users, status, "createdAt", "updateAt", "cieAreaId", "financeProductId") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
-            [id, projectName, deptCode, users, status, createdAt, updateAt, cieAreaId, financeProductId]);
-        res.json({ projects: newProject.rows[0] });
+        const getProjectsQuery =
+            "select * from projects";
+        const projects = await pool.query(getProjectsQuery);
+        if(projects.rows.length === 0) return res.json({ message: 'No Projects Found'});
+        res.json({ projects: projects.rows });
     } catch (error) {
         res.status(401).send({ error: error.message });
     }
 })
+
+
+// get project information [get]
+router.get('/getProject', async (req, res) => {
+    try {
+        const { id } = req.body;
+        const getProjectQuery =
+            "select * from projects WHERE id=($1)";
+        const project = await pool.query(
+            getProjectQuery, [id]);
+        if (project.rows.length === 1) {
+            res.json({ project: project.rows[0] });
+        } else {
+            res.status(400).json({ error: "Project Not exists!" });
+        }
+    } catch (error) {
+        res.status(401).send({ error: error.message });
+    }
+})
+
+// update project Name [put]
+router.put('/updateProjectName', async (req, res) => {
+    const { projectname, id } = req.body;
+    try {
+        await pool.query('UPDATE public.projects SET projectname=($1), updatedat=Now() WHERE id=($2);',
+            [projectname, id]);
+        res.json("Project name Updated Successfully!");
+    } catch (error) {
+        res.status(401).send({ error: error.message });
+    }
+})
+
+
+// update project users [put]
+router.put('/updateProjectUsers', async (req, res) => {
+    const { users, id } = req.body;
+    try {
+        await pool.query('UPDATE public.projects SET users=($1), updatedat=Now() WHERE id=($2);',
+            [users, id]);
+        res.json("Users Updated Successfully!");
+    } catch (error) {
+        res.status(401).send({ error: error.message });
+    }
+})
+
+// update project Status[put]
+router.put('/updateProjectStatus', async (req, res) => {
+    const { status, id } = req.body;
+    try {
+        await pool.query('UPDATE public.projects SET status=($1), updatedat=Now() WHERE id=($2);',
+            [status, id]);
+        res.json("Status Updated Successfully!");
+    } catch (error) {
+        res.status(401).send({ error: error.message });
+    }
+})
+
+// remove project [delete]
+router.delete('/', async (req, res) => {
+    const { id } = req.body;
+    try {
+        await pool.query('DELETE FROM public.projects WHERE id=($1);',
+            [id]);
+        res.json("Project Removed Successfully!");
+    } catch (error) {
+        res.status(401).send({ error: error.message });
+    }
+})
+
+
+// bulk import 
+
+
+// bulk export
+
 
 module.exports = router;

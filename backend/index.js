@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const employeesRouter = require('./routes/user-routes.js');
 const authRouter = require('./routes/auth-routes.js')
+const projectRouter = require('./routes/project-routes.js')
 
 //look for .env file and pull environment variables
 dotenv.config();
@@ -21,7 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/api/employees',employeesRouter);
 app.use('/api/auth',authRouter);
-app.use('/api/projects',authRouter);
+app.use('/api/projects',projectRouter);
 
 
 /*assuming an express app is declared here*/
