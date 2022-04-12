@@ -46,7 +46,7 @@ router.get('/', async (req, res) => {
 })
 
 
-// get project information [get]
+// get project Data [get]
 router.get('/getProject', async (req, res) => {
     try {
         const { id } = req.body;
@@ -102,7 +102,7 @@ router.put('/updateProjectStatus', async (req, res) => {
 })
 
 // remove project [delete]
-router.delete('/', async (req, res) => {
+router.post('/removeProject', async (req, res) => {
     const { id } = req.body;
     try {
         await pool.query('DELETE FROM public.projects WHERE id=($1);',

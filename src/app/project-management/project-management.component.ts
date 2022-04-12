@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-project-management',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProjectManagementComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private dialog : MatDialog,
+  ) { }
 
   ngOnInit(): void {
   }
 
+  openAddProjectDialog() {
+    this.dialog.open(AddProjectDialogComponent,{
+      width:'30%'
+    })
+  }
 }

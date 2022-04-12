@@ -1,0 +1,107 @@
+<div>
+    <h2 mat-dialog-title>Add Project</h2>
+    <div mat-dialog-content>
+
+        <div class="example-container">
+            <form [formGroup]="addProjectForm">
+                <!-- Project ID -->
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Enter Project ID</mat-label>
+                    <input formControlName="id" matInput placeholder="Enter Id">
+                    <mat-error *ngIf="addProjectForm.controls['id'].hasError('required')">Project ID is
+                        <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Project Name -->
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Enter Project Name</mat-label>
+                    <input formControlName="projectname" matInput placeholder="Enter project Id">
+                    <mat-error *ngIf="addProjectForm.controls['projectname'].hasError('required')">Project Name is
+                        <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Department Code -->
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Enter Department Code</mat-label>
+                    <input formControlName="deptcode" matInput placeholder="Enter Department Code">
+                    <mat-error *ngIf="addProjectForm.controls['deptcode'].hasError('required')">Department Code is
+                        <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Users -->
+                <mat-form-field class="example-full-width" class="example-chip-list" appearance="outline">
+                    <mat-label>Select Users</mat-label>
+                    <mat-chip-list #chipList>
+                        <mat-chip *ngFor="let user of users" (removed)="remove(user)">
+                            {{user}}
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip>
+                        <input placeholder="New user..." #userInput [formControl]="userCtrl" [matAutocomplete]="auto"
+                            [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="add($event)">
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                            {{user}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="addProjectForm.controls['users'].hasError('required')">users must be
+                        <strong>selected</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Product -->
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Product</mat-label>
+                    <input formControlName="product" matInput placeholder="Enter Product">
+                    <mat-error *ngIf="addProjectForm.controls['product'].hasError('required')">Enter Product
+                        <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Status -->
+                <section class="example-section">
+                    <label class="example-margin">Status</label>
+                    <br>
+                    <br>
+                    <mat-radio-group aria-label="Select an option" color="primary" formControlName="status">
+                        <mat-radio-button value="0">Inactive</mat-radio-button>
+                        <br>
+                        <br>
+                        <mat-radio-button value="1">Active</mat-radio-button>
+                    </mat-radio-group>
+                </section>
+                <br>
+
+                <!-- Finance ID -->
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Enter CIE Area ID</mat-label>
+                    <input formControlName="cieareaid" matInput placeholder="Enter Id">
+                    <mat-error *ngIf="addProjectForm.controls['cieareaid'].hasError('required')">CIE Area ID is
+                        <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Finance ID -->
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Enter Finance ID</mat-label>
+                    <input formControlName="financeproductid" matInput placeholder="Enter Id">
+                    <mat-error *ngIf="addProjectForm.controls['financeproductid'].hasError('required')">Project ID is
+                        <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+            </form>
+        </div>
+
+    </div>
+    <div mat-dialog-actions [align]="'end'">
+        <button mat-button mat-dialog-close>Close</button>
+        <button mat-raised-button color="primary" (click)="addProject()">{{actionBtn}}</button>
+    </div>
+
+</div>

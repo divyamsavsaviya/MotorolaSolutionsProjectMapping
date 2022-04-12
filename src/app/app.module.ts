@@ -33,6 +33,14 @@ import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.compon
 import {MatSelectModule} from '@angular/material/select';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
+import { AddProjectDialogComponent } from './add-project-dialog/add-project-dialog.component';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatRadioModule} from '@angular/material/radio';
+import { ProjectTableComponent } from './project-table/project-table.component';
+
+
+
 
 @NgModule({
   declarations: [
@@ -44,6 +52,8 @@ import {MatSortModule} from '@angular/material/sort';
     ProjectManagementComponent,
     UserTableComponent,
     AddUserDialogComponent,
+    AddProjectDialogComponent,
+    ProjectTableComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,6 +78,9 @@ import {MatSortModule} from '@angular/material/sort';
     MatSelectModule,
     MatPaginatorModule,
     MatSortModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    MatRadioModule,
   ],
   providers: [AuthGuard , 
   {

@@ -1,0 +1,26 @@
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.td,
+th {
+    width: 25%;
+}
+
+.container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+table {
+    width: 100%;
+}
+
+th,
+td {
+    overflow: hidden;
+    width: 200px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
