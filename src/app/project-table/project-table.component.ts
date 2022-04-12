@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dialog.component';
 import { ProjectServiceService } from '../services/project-service.service';
 
 export interface Project {
@@ -23,11 +25,11 @@ export interface Project {
 export class ProjectTableComponent implements OnInit {
 
   constructor(
-    private projectService: ProjectServiceService
+    private projectService: ProjectServiceService,
+    private dialog : MatDialog
   ) { }
 
-  displayedColumns: string[] = ['id', 'projectname' , 'deptcode' ,
-     'users', 'product','status' , 'cieareaid' , 'financeproductid' , 'actions'];
+  displayedColumns: string[] = ['id', 'projectname' , 'deptcode' , 'users', 'product','status' , 'cieareaid' , 'financeproductid' , 'actions'];
   dataSource !: MatTableDataSource<Project>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -60,7 +62,14 @@ export class ProjectTableComponent implements OnInit {
   }
 
   editProject(project: any) {
-
+    this.dialog.open(AddProjectDialogComponent,{
+      width:'30%',
+      data:project
+    }).afterClosed().subscribe(val=>{
+      if(val == 'update') {
+        this.getProjects();
+      }
+    })
   }
 
   removeProject(project: any) {

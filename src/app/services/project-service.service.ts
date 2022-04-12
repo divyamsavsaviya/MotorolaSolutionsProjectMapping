@@ -27,6 +27,11 @@ export class ProjectServiceService {
   }
 
   // update project Name [put]
+  updateProject({id , users , status} : any) {
+    return this.http.put<any>(this.apiURL , {id , users , status});
+  }
+
+  // update project Name [put]
   updateProjectName({id , projectname} : any) {
     return this.http.put<any>(this.apiURL + '/updateProjectName',{id , projectname});
   }

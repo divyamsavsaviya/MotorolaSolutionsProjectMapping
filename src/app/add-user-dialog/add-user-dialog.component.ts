@@ -72,7 +72,7 @@ export class AddUserDialogComponent implements OnInit {
           }
         });
       }
-    } {
+    } else {
       this.updateUserRole();
     }
   }

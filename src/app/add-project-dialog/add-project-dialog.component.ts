@@ -1,11 +1,11 @@
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { Component, OnInit , ElementRef, ViewChild } from '@angular/core';
-import { FormGroup , FormBuilder, Validators, FormControl } from '@angular/forms';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Component, OnInit, ElementRef, ViewChild, Inject } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { ProjectServiceService } from '../services/project-service.service';
 
 @Component({
@@ -14,6 +14,7 @@ import { ProjectServiceService } from '../services/project-service.service';
   styleUrls: ['./add-project-dialog.component.css']
 })
 export class AddProjectDialogComponent implements OnInit {
+  title = 'Add Project';
   actionBtn: string = "Add";
   separatorKeysCodes: number[] = [ENTER, COMMA];
   userCtrl = new FormControl();
@@ -26,8 +27,9 @@ export class AddProjectDialogComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private projectService: ProjectServiceService,
-    private dialogRef: MatDialogRef<AddProjectDialogComponent>
-  ) { 
+    private dialogRef: MatDialogRef<AddProjectDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public editData: any,
+  ) {
     this.filteredUsers = this.userCtrl.valueChanges.pipe(
       startWith(null),
       map((user: string | null) => (user ? this._filter(user) : this.allUsers.slice())),
@@ -80,20 +82,61 @@ export class AddProjectDialogComponent implements OnInit {
       cieareaid: ['', Validators.required],
       financeproductid: ['', Validators.required],
     });
+
+    if (this.editData) {
+      this.actionBtn = "Update";
+      this.title = "Update Project";
+      this.addProjectForm.controls['id'].setValue(this.editData.id);
+      this.addProjectForm.controls['id'].disable();
+      this.addProjectForm.controls['projectname'].setValue(this.editData.projectname);
+      this.addProjectForm.controls['projectname'].disable();
+      this.addProjectForm.controls['deptcode'].setValue(this.editData.deptcode);
+      this.addProjectForm.controls['deptcode'].disable();
+      this.users = this.editData.users;
+      this.addProjectForm.controls['product'].setValue(this.editData.product);
+      this.addProjectForm.controls['product'].disable();
+      this.addProjectForm.controls['cieareaid'].setValue(this.editData.cieareaid);
+      this.addProjectForm.controls['cieareaid'].disable();
+      this.addProjectForm.controls['status'].setValue(this.editData.status);
+      this.addProjectForm.controls['financeproductid'].setValue(this.editData.financeproductid);
+      this.addProjectForm.controls['financeproductid'].disable();
+    }
   }
 
   addProject() {
-    this.addProjectForm.controls['users'].setValue(this.users);
-    console.log(this.addProjectForm.value);
-    this.projectService.addProject(this.addProjectForm.value).subscribe({
-      next:(res) => {
-        console.log("Project Added Successfully")
-        this.dialogRef.close('add');
+    if (!this.editData) {
+      this.addProjectForm.controls['users'].setValue(this.users);
+      console.log(this.addProjectForm.value);
+      this.projectService.addProject(this.addProjectForm.value).subscribe({
+        next: (res) => {
+          console.log("Project Added Successfully")
+          this.dialogRef.close('add');
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      })
+    } else {
+      this.upadateProject();
+    }
+  }
+
+  // currentlly users and status can be updated
+  upadateProject() {
+    const users = this.users;
+    const id = this.addProjectForm.controls['id'].value;
+    const status = this.addProjectForm.controls['status'].value;
+
+    // validate data
+    this.projectService.updateProject({id,users,status}).subscribe ({
+      next: (res) => {
+        this.addProjectForm.reset();
+        this.dialogRef.close('update')
       },
-      error:(err) => {
-        console.log(err);
+      error : (error) => {
+        console.error(error.message);
       }
-    })
+    });
   }
 
 }

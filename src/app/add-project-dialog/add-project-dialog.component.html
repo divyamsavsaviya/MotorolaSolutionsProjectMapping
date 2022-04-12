@@ -1,5 +1,5 @@
 <div>
-    <h2 mat-dialog-title>Add Project</h2>
+    <h2 mat-dialog-title>{{title}}</h2>
     <div mat-dialog-content>
 
         <div class="example-container">
@@ -70,10 +70,10 @@
                     <br>
                     <br>
                     <mat-radio-group aria-label="Select an option" color="primary" formControlName="status">
-                        <mat-radio-button value="0">Inactive</mat-radio-button>
+                        <mat-radio-button [value]="false">Inactive</mat-radio-button>
                         <br>
                         <br>
-                        <mat-radio-button value="1">Active</mat-radio-button>
+                        <mat-radio-button [value]="true">Active</mat-radio-button>
                     </mat-radio-group>
                 </section>
                 <br>

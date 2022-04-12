@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ProjectTableComponent } from '../project-table/project-table.component';
 
 @Component({
   selector: 'app-project-management',
@@ -9,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ProjectManagementComponent implements OnInit {
 
+  @ViewChild(ProjectTableComponent) projectTableComponent !:ProjectTableComponent;
   constructor(
     private dialog : MatDialog,
   ) { }
@@ -19,6 +21,10 @@ export class ProjectManagementComponent implements OnInit {
   openAddProjectDialog() {
     this.dialog.open(AddProjectDialogComponent,{
       width:'30%'
+    }).afterClosed().subscribe(val => {
+      if(val === 'add') {
+        this.projectTableComponent.getProjects();
+      } 
     })
   }
 }

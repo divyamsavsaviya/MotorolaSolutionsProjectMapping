@@ -14,14 +14,15 @@ router.post('/', async (req, res) => {
             users,
             status,
             cieareaid,
-            financeproductid
+            financeproductid,
+            product
         } = req.body;
 
         const projectInsertQuery =
-            'INSERT INTO public.projects(id, projectname, deptcode, users, status, createdat, updatedat, cieareaid, financeproductid) VALUES ($1,$2,$3,$4,$5,Now(),Now(),$6,$7);';
+            'INSERT INTO public.projects(id, projectname, deptcode, users, status, createdat, updatedat, cieareaid, financeproductid , product) VALUES ($1,$2,$3,$4,$5,Now(),Now(),$6,$7,$8);';
         const newProject = await pool.query(
             projectInsertQuery,
-            [id, projectname, deptcode, users, status, cieareaid, financeproductid]);
+            [id, projectname, deptcode, users, status, cieareaid, financeproductid,product]);
         res.json({ message: "Project Added Successfully!" });
     } catch (error) {
         if (error.constraint === 'projects_pkey') {
@@ -59,6 +60,17 @@ router.get('/getProject', async (req, res) => {
         } else {
             res.status(400).json({ error: "Project Not exists!" });
         }
+    } catch (error) {
+        res.status(401).send({ error: error.message });
+    }
+})
+
+router.put('/', async (req, res) => {
+    const {id , users , status} = req.body;
+    try {
+        await pool.query('UPDATE public.projects SET users=($1), status=($2) , updatedat=Now() WHERE id=($3);',
+            [users,status,id]);
+        res.json("Project Updated Successfully!");
     } catch (error) {
         res.status(401).send({ error: error.message });
     }
