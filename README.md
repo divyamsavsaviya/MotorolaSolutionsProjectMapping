@@ -1,4 +1,5 @@
 # MotorolaProjectMapping
+![alt text](https://github.com/divyamsavsaviya/motorola-project-mapping/blob/master/MOTOROLA%20User%20Flow%20Diagram.drawio.png)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.4.
 
