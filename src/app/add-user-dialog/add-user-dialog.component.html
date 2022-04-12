@@ -8,19 +8,31 @@
         <mat-form-field class="example-full-width" appearance="outline">
           <mat-label>Enter ID</mat-label>
           <input formControlName="id" matInput placeholder="Enter Id">
+          <mat-error *ngIf="addUserForm.controls['id'].hasError('required')">ID is
+            <strong>required</strong>
+        </mat-error>
         </mat-form-field>
 
          <!-- Name -->
          <mat-form-field class="example-full-width" appearance="outline">
           <mat-label>Enter Name</mat-label>
           <input formControlName="name" matInput placeholder="Enter Id">
+          <mat-error *ngIf="addUserForm.controls['name'].hasError('required')">Name is
+            <strong>required</strong>
+        </mat-error>
         </mat-form-field>
 
         <!-- Email -->
         <mat-form-field class="example-full-width" appearance="outline">
           <mat-label>Enter Email</mat-label>
-          <input formControlName="email" matInput placeholder="abc@xyz.com">
+          <input formControlName="email" matInput placeholder="abc@xyz.com" >
           <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="addUserForm.controls['email'].hasError('required')">Email is
+            <strong>required</strong>
+        </mat-error>
+        <mat-error
+            *ngIf="addUserForm.controls['email'].hasError('email') && !addUserForm.controls['email'].hasError('required')">
+            please Enter a valid email address</mat-error>
         </mat-form-field>
 
         <!-- Password -->
@@ -31,6 +43,15 @@
             [attr.aria-pressed]="hide">
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
+          <mat-error *ngIf="addUserForm.controls['password'].hasError('required')">Password is
+            <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="addUserForm.controls['password'].hasError('invalid_p')">Password is
+            <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="addUserForm.controls['password'].hasError('minlength')">Password must contains 6
+          <strong>letters</strong>
+      </mat-error>
         </mat-form-field>
 
         <!-- Role -->
@@ -41,6 +62,9 @@
             <mat-option *ngFor="let role of roles" [value]="role">
               {{role}}
             </mat-option>
+            <mat-error *ngIf="addUserForm.controls['role'].hasError('')">Password is
+              <strong>required</strong>
+          </mat-error>
           </mat-select>
           <mat-error *ngIf="addUserForm.controls['role'].hasError('required')">Please choose a role</mat-error>
         </mat-form-field>
@@ -62,7 +86,7 @@
   </div>
   <div mat-dialog-actions [align]="'end'">
     <button mat-button mat-dialog-close>Close</button>
-    <button mat-raised-button color="primary" [disabled]="!addUserForm.valid" (click)="addUser()">{{actionBtn}}</button>
+    <button mat-raised-button color="primary"  [disabled]="!addUserForm.valid" (click)="addUser()">{{actionBtn}}</button>
   </div>
 
 </div>

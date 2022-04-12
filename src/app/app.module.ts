@@ -31,7 +31,8 @@ import { ProjectManagementComponent } from './project-management/project-managem
 import { UserTableComponent } from './user-table/user-table.component';
 import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.component';
 import {MatSelectModule} from '@angular/material/select';
-import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSortModule} from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,6 @@ import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.com
     ProjectManagementComponent,
     UserTableComponent,
     AddUserDialogComponent,
-    EditUserDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +66,8 @@ import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.com
     MatDialogModule,
     MatTableModule,
     MatSelectModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [AuthGuard , 
   {

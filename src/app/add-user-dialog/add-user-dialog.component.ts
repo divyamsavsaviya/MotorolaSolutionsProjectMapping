@@ -12,6 +12,7 @@ export class AddUserDialogComponent implements OnInit {
 
   actionBtn: string = "Add";
   showPassword: boolean = false;
+  disableEmail: boolean = false;
   hide: boolean = true;
   disable: boolean = true;
   constructor(
@@ -32,12 +33,16 @@ export class AddUserDialogComponent implements OnInit {
     });
 
     if (this.editData) {
-      console.log(this.editData);
-      this.showPassword=true;
+      this.showPassword = true;
+      this.disableEmail = true;
       this.actionBtn = "Update";
+      this.addUserForm.controls['id'].disable();
       this.addUserForm.controls['id'].setValue(this.editData.id);
       this.addUserForm.controls['email'].setValue(this.editData.email);
+      this.addUserForm.controls['email'].disable();
+      this.addUserForm.controls['password'].disable();
       this.addUserForm.controls['name'].setValue(this.editData.name);
+      this.addUserForm.controls['name'].disable();
       this.addUserForm.controls['role'].setValue(this.editData.role);
     }
   }
@@ -55,33 +60,37 @@ export class AddUserDialogComponent implements OnInit {
   ];
 
   addUser() {
-    if(!this.editData) {
+    if (!this.editData) {
       if (this.addUserForm.valid) {
-        console.log(this.addUserForm.value);
         this.employeeService.addEmployee(this.addUserForm.value).subscribe({
-            next: (res) => {
-              console.log("Added Successfully");
-              this.dialogRef.close();
-            },
-            error: (error) => {
-              console.log(error.message);
-            }
-          });
+          next: (res) => {
+            console.log("Added Successfully");
+            this.dialogRef.close('add');
+          },
+          error: (error) => {
+            console.log(error.message);
+          }
+        });
       }
     } {
-      this.updateUser();
+      this.updateUserRole();
     }
   }
 
-  updateUser() {
-    this.employeeService.updateEmployee(this.addUserForm.value).subscribe({
-      next:(res)=>{
+  updateUserRole() {
+    const id = this.addUserForm.controls['id'].value;
+    const role = this.addUserForm.controls['role'].value;
+
+    // validate role !== oldRole
+    this.employeeService.updateEmployeeRole({ id, role }).subscribe({
+      next: (res) => {
         this.addUserForm.reset();
         this.dialogRef.close('update');
       },
-      error:(error)=>{
+      error: (error) => {
         console.error(error.message);
       }
     })
+
   }
 }

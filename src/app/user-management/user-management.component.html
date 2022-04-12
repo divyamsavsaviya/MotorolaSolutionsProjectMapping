@@ -1,9 +1,14 @@
-<mat-toolbar-row >
+<mat-toolbar-row>
   <span>User Management</span>
   <span class="example-spacer"></span>
-  <button (click)="openAddUserDialog()" mat-icon-button class="example-icon" >
-    <mat-icon>person_add</mat-icon> 
+  <button mat-raised-button (click)="openAddUserDialog()">
+    <mat-icon>person_add</mat-icon> Add User
   </button>
+
+  <button mat-raised-button style="margin-left: 10px;">
+    <mat-icon>upload_file</mat-icon> Import Users
+  </button>
+
 </mat-toolbar-row>
 
 <app-user-table>

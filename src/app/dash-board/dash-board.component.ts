@@ -29,7 +29,7 @@ export class DashBoardComponent implements OnInit {
     this.authService.logout();
   }
   
-  sideBarOpen = true;
+  sideBarOpen = false;
   sideBarToggler(){
     this.sideBarOpen = !this.sideBarOpen;
   }

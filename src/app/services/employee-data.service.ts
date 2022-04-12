@@ -23,11 +23,12 @@ export class EmployeeDataService {
     return this.http.post<any>(this.apiURL + '/',employee);
   }
 
-  updateEmployee(employee : any) {
-    return this.http.put<any>(this.apiURL,employee);
+  updateEmployeeRole({id , role} : any) {
+    return this.http.put<any>(this.apiURL + '/updateRole',{id , role});
   }
 
   deleteUser(id : any) {
-    return this.http.delete<any>(this.apiURL ,id);
+    console.log('service.delete => ',id);
+    return this.http.post<any>(this.apiURL + '/removeEmployee',id);
   }
 }

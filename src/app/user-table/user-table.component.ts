@@ -4,12 +4,13 @@ import { EmployeeDataService } from '../services/employee-data.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import { MatDialog} from '@angular/material/dialog';
-import { EditUserDialogComponent } from '../edit-user-dialog/edit-user-dialog.component';
+import { AddUserDialogComponent } from '../add-user-dialog/add-user-dialog.component';
 
 export interface Employee {
   id: number;
   email: string;
-  team: string;
+  name : string;
+  role: string;
 }
 
 @Component({
@@ -34,8 +35,8 @@ export class UserTableComponent implements OnInit {
     this.getUsers();
   }
 
-  editUser(row : any) {
-    this.dialog.open(EditUserDialogComponent,{
+  editRole(row : any) {
+    this.dialog.open(AddUserDialogComponent,{
       width:'30%',
       data:row
     }).afterClosed().subscribe(val=>{
@@ -49,10 +50,8 @@ export class UserTableComponent implements OnInit {
     this.employeeService.getEmployee().subscribe({
       next:(res)=>{   
         this.dataSource = new MatTableDataSource(res.employees);
-        this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(this.dataSource);
-        
+        this.dataSource.paginator = this.paginator;
       },
       error:(err)=>{
         console.log(err.message);
@@ -60,16 +59,17 @@ export class UserTableComponent implements OnInit {
     })
   }
 
-  deleteUser(id : number){
-    this.employeeService.deleteUser({id})
-    .subscribe({
+  deleteUser(row : any){
+    console.log(row);
+    this.employeeService.deleteUser(row).subscribe({
       next:(res)=>{
-        console.log("Deleted user id " +id);
+        this.getUsers();
       },
       error:(err)=>{
         console.log(err.message);
       }
     })
+    
   }
 
   applyFilter(event: Event) {
