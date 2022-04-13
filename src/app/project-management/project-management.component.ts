@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectTableComponent } from '../project-table/project-table.component';
+import { DialogFileUploadComponent } from '../dialog-file-upload/dialog-file-upload.component';
 
 @Component({
   selector: 'app-project-management',
@@ -25,6 +26,12 @@ export class ProjectManagementComponent implements OnInit {
       if(val === 'add') {
         this.projectTableComponent.getProjects();
       } 
+    })
+  }
+
+  openFileUploadDialog(){
+    this.dialog.open(DialogFileUploadComponent , {
+      width:'30%'
     })
   }
 }

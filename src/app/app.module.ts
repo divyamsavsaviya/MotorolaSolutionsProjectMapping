@@ -38,6 +38,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatRadioModule} from '@angular/material/radio';
 import { ProjectTableComponent } from './project-table/project-table.component';
+import { DialogFileUploadComponent } from './dialog-file-upload/dialog-file-upload.component';
 
 
 
@@ -54,6 +55,7 @@ import { ProjectTableComponent } from './project-table/project-table.component';
     AddUserDialogComponent,
     AddProjectDialogComponent,
     ProjectTableComponent,
+    DialogFileUploadComponent,
   ],
   imports: [
     BrowserModule,
