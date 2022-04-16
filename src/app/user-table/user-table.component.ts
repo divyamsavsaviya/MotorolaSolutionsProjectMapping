@@ -39,7 +39,7 @@ export class UserTableComponent implements OnInit {
     this.dialog.open(AddUserDialogComponent,{
       width:'30%',
       data:row
-    }).afterClosed().subscribe(val=>{
+    }).afterClosed().subscribe((val)=>{
       if(val == 'update') {
         this.getUsers();
       }

@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db.js');
-const { authenticateToken } = require('../middleware/authorization.js')
+const { authenticateToken } = require('../middleware/authorization.js');
+const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
 const router = express.Router()
 
@@ -22,7 +23,7 @@ router.post('/', async (req, res) => {
             'INSERT INTO public.projects(id, projectname, deptcode, users, status, createdat, updatedat, cieareaid, financeproductid , product) VALUES ($1,$2,$3,$4,$5,Now(),Now(),$6,$7,$8);';
         const newProject = await pool.query(
             projectInsertQuery,
-            [id, projectname, deptcode, users, status, cieareaid, financeproductid,product]);
+            [id, projectname, deptcode, users, status, cieareaid, financeproductid, product]);
         res.json({ message: "Project Added Successfully!" });
     } catch (error) {
         if (error.constraint === 'projects_pkey') {
@@ -39,7 +40,7 @@ router.get('/', async (req, res) => {
         const getProjectsQuery =
             "select * from projects";
         const projects = await pool.query(getProjectsQuery);
-        if(projects.rows.length === 0) return res.json({ message: 'No Projects Found'});
+        if (projects.rows.length === 0) return res.json({ message: 'No Projects Found' });
         res.json({ projects: projects.rows });
     } catch (error) {
         res.status(401).send({ error: error.message });
@@ -66,10 +67,10 @@ router.get('/getProject', async (req, res) => {
 })
 
 router.put('/', async (req, res) => {
-    const {id , users , status} = req.body;
+    const { id, users, status } = req.body;
     try {
         await pool.query('UPDATE public.projects SET users=($1), status=($2) , updatedat=Now() WHERE id=($3);',
-            [users,status,id]);
+            [users, status, id]);
         res.json("Project Updated Successfully!");
     } catch (error) {
         res.status(401).send({ error: error.message });
@@ -128,7 +129,49 @@ router.post('/removeProject', async (req, res) => {
 // bulk import 
 
 
-// bulk export
+// bulk export [get]]
+// projects will export to backend/download/project.csv
+router.get('/exportProjects', async (req, res) => {
+    try {
+        const getProjectsQuery =
+            "select * from projects";
+        const projects = await pool.query(getProjectsQuery);
+        if (projects.rows.length === 0) return res.json({ message: 'No Projects Found' });
+        const jsonData = projects.rows;
+        const csvWriter = createCsvWriter({
+            path: "download/projects.csv",
+
+            header: [
+                { id: "id", title: "id" },
+                { id: "projectname", title: "projectname" },
+                { id: "deptcode", title: "deptcode" },
+                { id: "users", title: "users" },
+                { id: "product", title: "product" },
+                { id: "status", title: "status" },
+                { id: "createdat", title: "createdat" },
+                { id: "updatedat", title: "updatedat" },
+                { id: "cieareaid", title: "cieareaid" },
+                { id: "financeproductid", title: "financeproductid" },
+            ]
+        });
+
+        const fileName = "projects.csv";
+        csvWriter.writeRecords(jsonData).then(() =>
+            console.log("Write to projects.csv successfully!"),
+        );
+
+        res.download("download/projects.csv" , fileName, (err) => {
+            if (err) {
+                res.status(500).send({
+                    message: "Could not download the file. " + err,
+                });
+            }
+        })
+
+    } catch (error) {
+        res.status(401).send({ error: error.message });
+    }
+})
 
 
 module.exports = router;

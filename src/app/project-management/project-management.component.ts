@@ -3,6 +3,7 @@ import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dia
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectTableComponent } from '../project-table/project-table.component';
 import { DialogFileUploadComponent } from '../dialog-file-upload/dialog-file-upload.component';
+import { ProjectServiceService } from '../services/project-service.service';
 
 @Component({
   selector: 'app-project-management',
@@ -11,27 +12,40 @@ import { DialogFileUploadComponent } from '../dialog-file-upload/dialog-file-upl
 })
 export class ProjectManagementComponent implements OnInit {
 
-  @ViewChild(ProjectTableComponent) projectTableComponent !:ProjectTableComponent;
+  @ViewChild(ProjectTableComponent) projectTableComponent !: ProjectTableComponent;
   constructor(
-    private dialog : MatDialog,
+    private dialog: MatDialog,
+    private projectService: ProjectServiceService,
   ) { }
 
   ngOnInit(): void {
   }
 
   openAddProjectDialog() {
-    this.dialog.open(AddProjectDialogComponent,{
-      width:'30%'
+    this.dialog.open(AddProjectDialogComponent, {
+      width: '30%'
     }).afterClosed().subscribe(val => {
-      if(val === 'add') {
+      if (val === 'add') {
         this.projectTableComponent.getProjects();
-      } 
+      }
     })
   }
 
-  openFileUploadDialog(){
-    this.dialog.open(DialogFileUploadComponent , {
-      width:'30%'
+  openFileUploadDialog() {
+    this.dialog.open(DialogFileUploadComponent, {
+      width: '30%'
+    })
+  }
+
+  exportProject() {
+    this.projectService.getExportedProjects().subscribe({
+      next: (res) => {
+        console.log("Project Download Successfully!!"); 
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+      }
     })
   }
 }

@@ -50,4 +50,8 @@ export class ProjectServiceService {
   removeProject(project : any) {
     return this.http.post<any>(this.apiURL + '/removeProject',project);
   }
+
+  getExportedProjects() {
+    return this.http.get<any>(this.apiURL + '/exportProjects',);
+  }
 }

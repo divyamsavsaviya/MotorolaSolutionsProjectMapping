@@ -117,12 +117,12 @@ export class AddProjectDialogComponent implements OnInit {
         }
       })
     } else {
-      this.upadateProject();
+      this.updateProject();
     }
   }
 
-  // currentlly users and status can be updated
-  upadateProject() {
+  // currently users and status can be updated
+  updateProject() {
     const users = this.users;
     const id = this.addProjectForm.controls['id'].value;
     const status = this.addProjectForm.controls['status'].value;
