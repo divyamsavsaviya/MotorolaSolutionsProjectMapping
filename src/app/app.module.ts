@@ -39,8 +39,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatRadioModule} from '@angular/material/radio';
 import { ProjectTableComponent } from './project-table/project-table.component';
 import { DialogFileUploadComponent } from './dialog-file-upload/dialog-file-upload.component';
-
-
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({

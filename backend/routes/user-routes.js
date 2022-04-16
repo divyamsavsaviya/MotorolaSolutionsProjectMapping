@@ -1,7 +1,8 @@
 const express = require('express');
 const pool = require('../db.js');
 const bcrypt = require('bcrypt');
-const { authenticateToken } = require('../middleware/authorization.js')
+const { authenticateToken } = require('../middleware/authorization.js');
+const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
 const router = express.Router()
 
@@ -99,6 +100,47 @@ router.post('/removeEmployee', async (req, res) => {
         res.json("Removed Employee Successfully!");
     } catch (error) {
         res.send({ error: error.message });
+    }
+})
+
+// bulk import 
+
+
+// bulk export [get]]
+// users will export to backend/download/users.csv
+router.get('/exportEmployees', async (req, res) => {
+    try {
+        const getProjectsQuery =
+            "select * from users";
+        const projects = await pool.query(getProjectsQuery);
+        if (projects.rows.length === 0) return res.json({ message: 'No Users Found' });
+        const jsonData = projects.rows;
+        const csvWriter = createCsvWriter({
+            path: "download/users.csv",
+
+            header: [
+                { id: "id", title: "id" },
+                { id: "email", title: "email" },
+                { id: "name", title: "name" },
+                { id: "role", title: "role" },
+            ]
+        });
+
+        const fileName = "users.csv";
+        csvWriter.writeRecords(jsonData).then(() =>
+            console.log("Write to users.csv successfully!"),
+        );
+
+        res.download("/users.csv" , fileName, (err) => {
+            if (err) {
+                res.status(500).send({
+                    message: "Could not download the file. " + err,
+                });
+            }
+        })
+
+    } catch (error) {
+        res.status(401).send({ error: error.message });
     }
 })
 

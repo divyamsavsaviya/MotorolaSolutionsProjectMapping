@@ -31,4 +31,8 @@ export class EmployeeDataService {
     console.log('service.delete => ',id);
     return this.http.post<any>(this.apiURL + '/removeEmployee',id);
   }
+
+  getExportedUsers() {
+    return this.http.get<any>(this.apiURL + '/exportUsers',);
+  }
 }
