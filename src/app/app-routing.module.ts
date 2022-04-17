@@ -6,6 +6,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { LoginComponent } from './login/login.component';
 import { ProjectManagementComponent } from './project-management/project-management.component';
 import { UserManagementComponent } from './user-management/user-management.component';
+import { RoleGuard } from './guards/role.guard';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
       {
         path: 'userManagement',
         component: UserManagementComponent,
+        canActivate: [RoleGuard],
       },
       {
         path: 'projectManagement',

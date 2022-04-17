@@ -1,19 +1,20 @@
 <mat-toolbar-row>
   <span>User Management</span>
   <span class="example-spacer"></span>
-  <button mat-raised-button (click)="openAddUserDialog()">
+
+  <button class="toolbar-btn" mat-raised-button (click)="openAddUserDialog()">
     <mat-icon>person_add</mat-icon> Add User
   </button>
 
-  <button mat-raised-button style="margin-left: 10px;">
+  <button mat-raised-button class="toolbar-btn">
     <mat-icon>upload_file</mat-icon> Import Users
   </button>
 
-  <button mat-raised-button style="margin-left: 10px;" (click)="exportUsers()">
+  <button mat-raised-button class="toolbar-btn" (click)="exportUsers()"> 
     <mat-icon>file_download </mat-icon> Export Users
   </button>
 
-  <button mat-raised-button style="margin-left: 10px;" (click)="bulkRemove()">
+  <button mat-raised-button class="toolbar-btn" (click)="bulkRemove()"> 
     <mat-icon>delete </mat-icon> Bulk Remove
   </button>
 

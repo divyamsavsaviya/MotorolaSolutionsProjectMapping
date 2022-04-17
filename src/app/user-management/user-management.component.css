@@ -1,8 +1,14 @@
 .example-spacer {
   flex: 1 1 auto;
+  
 }
 
 .example-button-row button,
 .example-button-row a {
   margin-right: 8px;
+}
+
+.toolbar-btn {
+  margin-left: 4px;
+  margin-right: 4px;
 }

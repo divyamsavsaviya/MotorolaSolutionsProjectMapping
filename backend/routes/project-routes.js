@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('../db.js');
 const { authenticateToken } = require('../middleware/authorization.js');
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
+const path = require('path')
 
 const router = express.Router()
 
@@ -159,7 +160,13 @@ router.get('/exportProjects', async (req, res) => {
             console.log("Write to projects.csv successfully!"),
         );
 
-        res.sendFile(fileName, { root: __dirname });
+        const fileDirecoty = path.join(__dirname , '../download/');
+        const file = path.resolve(fileDirecoty + fileName);
+        res.download(file)
+        // //No need for special headers
+        // res.download(file);
+
+        // res.sendFile(fileName, { root: __dirname });
         // res.send({ dir: __dirname })
 
         // res.download("download/projects.csv" , fileName, (err) => {

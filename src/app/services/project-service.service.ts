@@ -12,8 +12,8 @@ export class ProjectServiceService {
   ) { }
 
   // get project data [get]
-  getProjectData(id : any) {
-    return this.http.post<any>(this.apiURL + '/getProject',id);
+  getProjectData(id: any) {
+    return this.http.post<any>(this.apiURL + '/getProject', id);
   }
 
   // get project list [get]
@@ -22,36 +22,37 @@ export class ProjectServiceService {
   }
 
   // Add Project [post]
-  addProject(project : any) {
-    return this.http.post<any>(this.apiURL + '/',project);
+  addProject(project: any) {
+    return this.http.post<any>(this.apiURL + '/', project);
   }
 
   // update project Name [put]
-  updateProject({id , users , status} : any) {
-    return this.http.put<any>(this.apiURL , {id , users , status});
+  updateProject({ id, users, status }: any) {
+    return this.http.put<any>(this.apiURL, { id, users, status });
   }
 
   // update project Name [put]
-  updateProjectName({id , projectname} : any) {
-    return this.http.put<any>(this.apiURL + '/updateProjectName',{id , projectname});
+  updateProjectName({ id, projectname }: any) {
+    return this.http.put<any>(this.apiURL + '/updateProjectName', { id, projectname });
   }
 
   // update project users [put]
-  updateProjectUsers({id , users} : any) {
-    return this.http.put<any>(this.apiURL + '/updateProjectName',{id , users});
+  updateProjectUsers({ id, users }: any) {
+    return this.http.put<any>(this.apiURL + '/updateProjectName', { id, users });
   }
 
   // update project Status[put]
-  updateProjectStatus({id , status} : any) {
-    return this.http.put<any>(this.apiURL + '/updateProjectName',{id , status});
+  updateProjectStatus({ id, status }: any) {
+    return this.http.put<any>(this.apiURL + '/updateProjectName', { id, status });
   }
 
   // remove project [delete]
-  removeProject(project : any) {
-    return this.http.post<any>(this.apiURL + '/removeProject',project);
+  removeProject(project: any) {
+    return this.http.post<any>(this.apiURL + '/removeProject', project);
   }
 
   getExportedProjects() {
-    return this.http.get<any>(this.apiURL + '/exportProjects',);
+    return this.http.get(this.apiURL + '/exportProjects',
+      { observe: 'response', responseType : 'blob' });
   }
 }
