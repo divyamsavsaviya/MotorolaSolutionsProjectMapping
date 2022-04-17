@@ -1,13 +1,17 @@
 <mat-nav-list>
     <h1 class="mat-subheader">Hello {{name}}</h1>
-    <h2 class="mat-subheader">User Management</h2>
-    <div >
-        <a mat-list-item routerLink="/dashBoard/userManagement" routerLinkActive="list-item-active" >
-            <mat-icon>manage_accounts</mat-icon> User Management
+    <div *ngIf="this.role == 'Admin'">
+        <h2 class="mat-subheader">User Management</h2>
+        <div>
+            <a mat-list-item routerLink="/dashBoard/userManagement" routerLinkActive="list-item-active">
+                <mat-icon>manage_accounts</mat-icon> User Management
+            </a>
+        </div>
+    </div>
+    <div *ngIf="this.role == 'Editor' || 'Viewer'">
+        <h2 class="mat-subheader">Project Management</h2>
+        <a mat-list-item routerLink="/dashBoard/projectManagement" routerLinkActive="list-item-active" href="">
+            <mat-icon>source</mat-icon> Project Management
         </a>
     </div>
-    <h2 class="mat-subheader">Project Management</h2>
-    <a mat-list-item routerLink="/dashBoard/projectManagement" routerLinkActive="list-item-active" href="">
-        <mat-icon>source</mat-icon> Project Management
-    </a>
 </mat-nav-list>

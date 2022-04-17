@@ -144,4 +144,17 @@ router.get('/exportEmployees', async (req, res) => {
     }
 })
 
+
+// remove bulk users
+router.post('/removeEmployees', async (req, res) => {
+    userIds = req.body
+    console.log(any(STRING_TO_ARRAY(userIds)));
+    try {
+        await pool.query('DELETE FROM public.users WHERE id= any(STRING_TO_ARRAY($1,','));', [userIds]);
+        res.json("Removed Employees Successfully!");
+    } catch (error) {
+        res.send({ error: error.message });
+    }
+})
+
 module.exports = router;

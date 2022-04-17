@@ -8,12 +8,14 @@ import { PayloadService } from '../services/payload.service';
 })
 export class SidenavComponent implements OnInit {
 
+  role !: string;
   constructor(
-    private payloadService : PayloadService,
+    private payloadService: PayloadService,
   ) { }
 
   name = this.payloadService.getEmployeeName();
   ngOnInit(): void {
+    this.role = this.payloadService.getEmployeeRole();
   }
 
 }

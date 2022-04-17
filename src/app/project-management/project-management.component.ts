@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProjectTableComponent } from '../project-table/project-table.component';
 import { DialogFileUploadComponent } from '../dialog-file-upload/dialog-file-upload.component';
 import { ProjectServiceService } from '../services/project-service.service';
+import { PayloadService } from '../services/payload.service';
 
 @Component({
   selector: 'app-project-management',
@@ -16,9 +17,12 @@ export class ProjectManagementComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private projectService: ProjectServiceService,
+    private payloadService: PayloadService,
   ) { }
 
+  role !: string;
   ngOnInit(): void {
+    this.role = this.payloadService.getEmployeeRole();
   }
 
   openAddProjectDialog() {
@@ -40,7 +44,7 @@ export class ProjectManagementComponent implements OnInit {
   exportProject() {
     this.projectService.getExportedProjects().subscribe({
       next: (res) => {
-        console.log("Project Download Successfully!!"); 
+        console.log("Project Download Successfully!!");
         console.log(res);
       },
       error: (err) => {

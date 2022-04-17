@@ -82,6 +82,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatChipsModule,
     MatAutocompleteModule,
     MatRadioModule,
+    MatCheckboxModule,
   ],
   providers: [AuthGuard , 
   {

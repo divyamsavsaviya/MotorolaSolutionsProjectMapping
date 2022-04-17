@@ -1,17 +1,23 @@
 <mat-toolbar-row>
   <h3>Project Management</h3>
   <span class="example-spacer"></span>
-  <button mat-raised-button (click)="openAddProjectDialog()">
-    <mat-icon>receipt</mat-icon> Add Project
-  </button>
+  <div *ngIf="this.role == 'Admin'">
+    <button mat-raised-button (click)="openAddProjectDialog()">
+      <mat-icon>receipt</mat-icon> Add Project
+    </button>
+  </div>
 
-  <button mat-raised-button style="margin-left: 10px;" (click)="openFileUploadDialog()">
-    <mat-icon>upload_file </mat-icon> Import Projects
-  </button>
+  <div *ngIf="this.role == 'Admin'">
+    <button mat-raised-button style="margin-left: 10px;" (click)="openFileUploadDialog()">
+      <mat-icon>upload_file </mat-icon> Import Projects
+    </button>
+  </div>
 
-  <button mat-raised-button style="margin-left: 10px;" (click)="exportProject()">
-    <mat-icon>file_download </mat-icon> Export Projects
-  </button>
+  <div *ngIf="this.role == 'Admin'">
+    <button mat-raised-button style="margin-left: 10px;" (click)="exportProject()">
+      <mat-icon>file_download </mat-icon> Export Projects
+    </button>
+  </div>
 
 </mat-toolbar-row>
 

@@ -11,28 +11,33 @@ export class EmployeeDataService {
     private http: HttpClient,
   ) { }
 
-  getEmployeData(email : any) {
-    return this.http.post<any>(this.apiURL + '/getEmployeeInformation',email);
+  getEmployeData(email: any) {
+    return this.http.post<any>(this.apiURL + '/getEmployeeInformation', email);
   }
 
   getEmployee() {
     return this.http.get<any>(this.apiURL);
   }
 
-  addEmployee(employee : any) {
-    return this.http.post<any>(this.apiURL + '/',employee);
+  addEmployee(employee: any) {
+    return this.http.post<any>(this.apiURL + '/', employee);
   }
 
-  updateEmployeeRole({id , role} : any) {
-    return this.http.put<any>(this.apiURL + '/updateRole',{id , role});
+  updateEmployeeRole({ id, role }: any) {
+    return this.http.put<any>(this.apiURL + '/updateRole', { id, role });
   }
 
-  deleteUser(id : any) {
-    console.log('service.delete => ',id);
-    return this.http.post<any>(this.apiURL + '/removeEmployee',id);
+  deleteUser(id: any) {
+    console.log('service.delete => ', id);
+    return this.http.post<any>(this.apiURL + '/removeEmployee', id);
   }
 
   getExportedUsers() {
     return this.http.get<any>(this.apiURL + '/exportUsers',);
+  }
+
+  removeEmployees(userIds: any) {
+    console.log(userIds);
+    return this.http.post<any>(this.apiURL + '/removeEmployees', userIds);
   }
 }

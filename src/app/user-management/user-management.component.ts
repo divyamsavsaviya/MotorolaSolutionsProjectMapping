@@ -11,34 +11,38 @@ import { UserTableComponent } from '../user-table/user-table.component';
 })
 export class UserManagementComponent implements OnInit {
 
-  @ViewChild(UserTableComponent) userTableComponent !:UserTableComponent;
+  @ViewChild(UserTableComponent) userTableComponent !: UserTableComponent;
   constructor(
-    private dialog : MatDialog,
-    private employeeService : EmployeeDataService,
+    private dialog: MatDialog,
+    private employeeService: EmployeeDataService,
   ) { }
 
   ngOnInit(): void {
   }
 
   openAddUserDialog() {
-    this.dialog.open(AddUserDialogComponent,{
-      width:'30%'
+    this.dialog.open(AddUserDialogComponent, {
+      width: '30%'
     }).afterClosed().subscribe(val => {
-      if(val === 'add') {
+      if (val === 'add') {
         this.userTableComponent.getUsers();
-      } 
+      }
     })
   }
 
   exportUsers() {
     this.employeeService.getExportedUsers().subscribe({
       next: (res) => {
-        console.log("User Download Successfully!!"); 
+        console.log("User Download Successfully!!");
         console.log(res);
       },
       error: (err) => {
         console.log(err);
       }
     })
+  }
+
+  bulkRemove() {
+    this.userTableComponent.removeUsers();
   }
 }

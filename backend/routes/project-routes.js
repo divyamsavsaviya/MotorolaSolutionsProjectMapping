@@ -138,9 +138,9 @@ router.get('/exportProjects', async (req, res) => {
         const projects = await pool.query(getProjectsQuery);
         if (projects.rows.length === 0) return res.json({ message: 'No Projects Found' });
         const jsonData = projects.rows;
+        const fileName = "projects.csv";
         const csvWriter = createCsvWriter({
-            path: "download/projects.csv",
-
+            path: "download/" + fileName,
             header: [
                 { id: "id", title: "id" },
                 { id: "projectname", title: "projectname" },
@@ -155,18 +155,20 @@ router.get('/exportProjects', async (req, res) => {
             ]
         });
 
-        const fileName = "projects.csv";
         csvWriter.writeRecords(jsonData).then(() =>
             console.log("Write to projects.csv successfully!"),
         );
 
-        res.download("download/projects.csv" , fileName, (err) => {
-            if (err) {
-                res.status(500).send({
-                    message: "Could not download the file. " + err,
-                });
-            }
-        })
+        res.sendFile(fileName, { root: __dirname });
+        // res.send({ dir: __dirname })
+
+        // res.download("download/projects.csv" , fileName, (err) => {
+        //     if (err) {
+        //         res.status(500).send({
+        //             message: "Could not download the file. " + err,
+        //         });
+        //     }
+        // })
 
     } catch (error) {
         res.status(401).send({ error: error.message });

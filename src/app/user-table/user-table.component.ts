@@ -1,15 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { EmployeeDataService } from '../services/employee-data.service';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import { MatDialog} from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
 import { AddUserDialogComponent } from '../add-user-dialog/add-user-dialog.component';
+import { SelectionModel } from '@angular/cdk/collections';
 
 export interface Employee {
   id: number;
   email: string;
-  name : string;
+  name: string;
   role: string;
 }
 
@@ -21,13 +22,13 @@ export interface Employee {
 export class UserTableComponent implements OnInit {
 
   constructor(
-    private employeeService : EmployeeDataService,
-    private dialog : MatDialog,
+    private employeeService: EmployeeDataService,
+    private dialog: MatDialog,
   ) { }
 
-  displayedColumns: string[] = ['id', 'email' , 'name' , 'role', 'actions'];
+  displayedColumns: string[] = ['select', 'id', 'email', 'name', 'role', 'actions'];
   dataSource !: MatTableDataSource<Employee>;
-  
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -35,12 +36,12 @@ export class UserTableComponent implements OnInit {
     this.getUsers();
   }
 
-  editRole(row : any) {
-    this.dialog.open(AddUserDialogComponent,{
-      width:'30%',
-      data:row
-    }).afterClosed().subscribe((val)=>{
-      if(val == 'update') {
+  editRole(row: any) {
+    this.dialog.open(AddUserDialogComponent, {
+      width: '30%',
+      data: row
+    }).afterClosed().subscribe((val) => {
+      if (val == 'update') {
         this.getUsers();
       }
     })
@@ -48,29 +49,30 @@ export class UserTableComponent implements OnInit {
 
   getUsers() {
     this.employeeService.getEmployee().subscribe({
-      next:(res)=>{   
+      next: (res) => {
         this.dataSource = new MatTableDataSource(res.employees);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
-      error:(err)=>{
+      error: (err) => {
         console.log(err.message);
       }
     })
   }
 
-  deleteUser(row : any){
+  deleteUser(row: any) {
     console.log(row);
     this.employeeService.deleteUser(row).subscribe({
-      next:(res)=>{
+      next: (res) => {
         this.getUsers();
       },
-      error:(err)=>{
+      error: (err) => {
         console.log(err.message);
       }
     })
-    
   }
+
+
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -78,5 +80,34 @@ export class UserTableComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  selection = new SelectionModel<Employee>(true, []);
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  removeUsers() {
+    const usersIDs = this.selection.selected.map((userData) => {
+      return userData.id;
+    });
+    this.employeeService.removeEmployees(usersIDs).subscribe({
+      next: (res) => {
+        this.getUsers();
+      },
+      error: (err) => {
+        console.log(err.message);
+      }
+    })
   }
 }
