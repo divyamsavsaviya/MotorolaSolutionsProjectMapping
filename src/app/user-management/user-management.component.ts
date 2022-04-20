@@ -31,15 +31,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   exportUsers() {
-    this.employeeService.getExportedUsers().subscribe({
-      next: (res) => {
-        console.log("User Download Successfully!!");
-        console.log(res);
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    })
+    this.userTableComponent.exportUsers();
   }
 
   bulkRemove() {

@@ -14,7 +14,7 @@ import { ProjectServiceService } from '../services/project-service.service';
   styleUrls: ['./add-project-dialog.component.css']
 })
 export class AddProjectDialogComponent implements OnInit {
-  title = 'Add Project';
+  actionTitle = 'Add Project';
   actionBtn: string = "Add";
   separatorKeysCodes: number[] = [ENTER, COMMA];
   userCtrl = new FormControl();
@@ -85,7 +85,7 @@ export class AddProjectDialogComponent implements OnInit {
 
     if (this.editData) {
       this.actionBtn = "Update";
-      this.title = "Update Project";
+      this.actionTitle = "Update Project";
       this.addProjectForm.controls['id'].setValue(this.editData.id);
       this.addProjectForm.controls['id'].disable();
       this.addProjectForm.controls['projectname'].setValue(this.editData.projectname);

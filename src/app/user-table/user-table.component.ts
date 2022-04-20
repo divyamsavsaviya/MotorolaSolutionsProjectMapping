@@ -6,6 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { AddUserDialogComponent } from '../add-user-dialog/add-user-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
+import { FileService } from '../services/file.service';
 
 export interface Employee {
   id: number;
@@ -24,6 +25,7 @@ export class UserTableComponent implements OnInit {
   constructor(
     private employeeService: EmployeeDataService,
     private dialog: MatDialog,
+    private fileService: FileService,
   ) { }
 
   displayedColumns: string[] = ['select', 'id', 'email', 'name', 'role', 'actions'];
@@ -47,10 +49,12 @@ export class UserTableComponent implements OnInit {
     })
   }
 
+  employees : any;
   getUsers() {
     this.employeeService.getEmployee().subscribe({
       next: (res) => {
-        this.dataSource = new MatTableDataSource(res.employees);
+        this.employees = res.employees;
+        this.dataSource = new MatTableDataSource(this.employees);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
@@ -71,8 +75,6 @@ export class UserTableComponent implements OnInit {
       }
     })
   }
-
-
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -109,5 +111,10 @@ export class UserTableComponent implements OnInit {
         console.log(err.message);
       }
     })
+  }
+
+  exportUsers() {
+    const headerList = ['id', 'email', 'name', 'role'];
+    this.fileService.downloadFile(this.employees,'users',headerList);
   }
 }

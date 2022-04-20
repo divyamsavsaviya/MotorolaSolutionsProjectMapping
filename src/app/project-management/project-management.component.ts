@@ -42,15 +42,6 @@ export class ProjectManagementComponent implements OnInit {
   }
 
   exportProject() {
-    this.projectService.getExportedProjects().subscribe({
-      next: (res) => {
-        let fileName = res.headers.get('content-disposition')?.split(';')[1].split('=')[1];
-        let blob : Blob = res.body as Blob;
-        let a = document.createElement('a');
-        a.download = fileName as string;
-        a.href = window.URL.createObjectURL(blob);
-        a.click();
-      }
-    })
+    this.projectTableComponent.exportProjects();
   }
 }

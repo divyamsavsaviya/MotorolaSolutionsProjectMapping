@@ -10,6 +10,7 @@ import { EmployeeDataService } from '../services/employee-data.service';
 })
 export class AddUserDialogComponent implements OnInit {
 
+  actionTitle: string = 'Add User';
   actionBtn: string = "Add";
   showPassword: boolean = false;
   disableEmail: boolean = false;
@@ -35,6 +36,7 @@ export class AddUserDialogComponent implements OnInit {
     if (this.editData) {
       this.showPassword = true;
       this.disableEmail = true;
+      this.actionTitle = "Update User";
       this.actionBtn = "Update";
       this.addUserForm.controls['id'].disable();
       this.addUserForm.controls['id'].setValue(this.editData.id);

@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dialog.component';
+import { FileService } from '../services/file.service';
 import { PayloadService } from '../services/payload.service';
 import { ProjectServiceService } from '../services/project-service.service';
 
@@ -29,6 +30,7 @@ export class ProjectTableComponent implements OnInit {
     private projectService: ProjectServiceService,
     private dialog: MatDialog,
     private payloadService: PayloadService,
+    private fileService: FileService,
   ) { }
 
   displayedColumns: string[] = ['id', 'projectname', 'deptcode', 'users', 'product', 'status', 'cieareaid', 'financeproductid', 'actions'];
@@ -46,10 +48,12 @@ export class ProjectTableComponent implements OnInit {
     this.getProjects();
   }
 
+  projects : any;
   getProjects() {
     this.projectService.getProjects().subscribe({
       next: (res) => {
-        this.dataSource = new MatTableDataSource(res.projects);
+        this.projects = res.projects;
+        this.dataSource = new MatTableDataSource(this.projects);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         console.log(res);
@@ -90,6 +94,11 @@ export class ProjectTableComponent implements OnInit {
 
       }
     })
+  }
+
+  exportProjects() {
+    const headerList = ['id', 'projectname', 'deptcode', 'users', 'product', 'status', 'cieareaid', 'financeproductid'];
+    this.fileService.downloadFile(this.projects,'projects',headerList);
   }
 
 }
