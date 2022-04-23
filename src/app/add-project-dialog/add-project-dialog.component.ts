@@ -57,6 +57,7 @@ export class AddProjectDialogComponent implements OnInit {
       this.users.splice(index, 1);
     }
   }
+
   selected(event: MatAutocompleteSelectedEvent): void {
     this.users.push(event.option.viewValue);
     this.userInput.nativeElement.value = '';
@@ -73,7 +74,6 @@ export class AddProjectDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.addProjectForm = this.formBuilder.group({
-      id: ['', [Validators.required]],
       projectname: ['', [Validators.required]],
       deptcode: ['', [Validators.required]],
       users: ['', [Validators.required]],
@@ -86,8 +86,6 @@ export class AddProjectDialogComponent implements OnInit {
     if (this.editData) {
       this.actionBtn = "Update";
       this.actionTitle = "Update Project";
-      this.addProjectForm.controls['id'].setValue(this.editData.id);
-      this.addProjectForm.controls['id'].disable();
       this.addProjectForm.controls['projectname'].setValue(this.editData.projectname);
       this.addProjectForm.controls['projectname'].disable();
       this.addProjectForm.controls['deptcode'].setValue(this.editData.deptcode);
@@ -124,11 +122,10 @@ export class AddProjectDialogComponent implements OnInit {
   // currently users and status can be updated
   updateProject() {
     const users = this.users;
-    const id = this.addProjectForm.controls['id'].value;
     const status = this.addProjectForm.controls['status'].value;
 
     // validate data
-    this.projectService.updateProject({id,users,status}).subscribe ({
+    this.projectService.updateProject({users,status}).subscribe ({
       next: (res) => {
         this.addProjectForm.reset();
         this.dialogRef.close('update')

@@ -4,14 +4,6 @@
 
     <div class="example-container">
       <form [formGroup]="addUserForm">
-        <!-- User ID -->
-        <mat-form-field class="example-full-width" appearance="outline">
-          <mat-label>Enter User ID</mat-label>
-          <input formControlName="id" matInput placeholder="Enter Id">
-          <mat-error *ngIf="addUserForm.controls['id'].hasError('required')">User ID is
-            <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
 
         <!-- User Name -->
         <mat-form-field class="example-full-width" appearance="outline">

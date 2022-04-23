@@ -9,11 +9,11 @@ const router = express.Router()
 // Add employee
 router.post('/', async (req, res) => {
     try {
-        const { email, password, name, role, id } = req.body;
+        const { email, password, name, role } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
         const newEmployee = await pool.query(
-            'INSERT INTO public.users (email, password, name , role,id) VALUES ($1,$2,$3,$4,$5) RETURNING *',
-            [email, hashedPassword, name, role, id]);
+            'INSERT INTO public.users (email, password, name , role) VALUES ($1,$2,$3,$4) RETURNING *',
+            [email, hashedPassword, name, role]);
         res.json({ employees: newEmployee.rows[0] });
     } catch (error) {
         if (error.constraint === 'employees_pkey') {

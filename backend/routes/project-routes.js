@@ -10,7 +10,6 @@ const router = express.Router()
 router.post('/', async (req, res) => {
     try {
         const {
-            id,
             projectname,
             deptcode,
             users,
@@ -21,14 +20,14 @@ router.post('/', async (req, res) => {
         } = req.body;
 
         const projectInsertQuery =
-            'INSERT INTO public.projects(id, projectname, deptcode, users, status, createdat, updatedat, cieareaid, financeproductid , product) VALUES ($1,$2,$3,$4,$5,Now(),Now(),$6,$7,$8);';
+            'INSERT INTO public.projects( projectname, deptcode, users, status, createdat, updatedat, cieareaid, financeproductid , product) VALUES ($1,$2,$3,$4,$5,Now(),Now(),$6,$7,$8);';
         const newProject = await pool.query(
             projectInsertQuery,
-            [id, projectname, deptcode, users, status, cieareaid, financeproductid, product]);
+            [projectname, deptcode, users, status, cieareaid, financeproductid, product]);
         res.json({ message: "Project Added Successfully!" });
     } catch (error) {
         if (error.constraint === 'projects_pkey') {
-            res.status(401).send({ error: "Project already exists!", errorType: 'project_exists' });
+            res.status(401).send({ error: "Project already exists!", errorType: 'project_exists' , });
         } else {
             res.status(401).send({ error: error.message });
         }

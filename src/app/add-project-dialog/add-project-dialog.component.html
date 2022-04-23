@@ -4,14 +4,6 @@
 
         <div class="example-container">
             <form [formGroup]="addProjectForm">
-                <!-- Project ID -->
-                <mat-form-field class="example-full-width" appearance="outline">
-                    <mat-label>Enter Project ID</mat-label>
-                    <input formControlName="id" matInput placeholder="Enter Id">
-                    <mat-error *ngIf="addProjectForm.controls['id'].hasError('required')">Project ID is
-                        <strong>required</strong>
-                    </mat-error>
-                </mat-form-field>
 
                 <!-- Project Name -->
                 <mat-form-field class="example-full-width" appearance="outline">

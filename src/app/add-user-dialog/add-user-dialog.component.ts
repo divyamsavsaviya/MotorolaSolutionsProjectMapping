@@ -26,7 +26,6 @@ export class AddUserDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.addUserForm = this.formBuilder.group({
-      id: ['', [Validators.required]],
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -38,8 +37,8 @@ export class AddUserDialogComponent implements OnInit {
       this.disableEmail = true;
       this.actionTitle = "Update User";
       this.actionBtn = "Update";
-      this.addUserForm.controls['id'].disable();
-      this.addUserForm.controls['id'].setValue(this.editData.id);
+      // this.addUserForm.controls['id'].disable();
+      // this.addUserForm.controls['id'].setValue(this.editData.id);
       this.addUserForm.controls['email'].setValue(this.editData.email);
       this.addUserForm.controls['email'].disable();
       this.addUserForm.controls['password'].disable();
