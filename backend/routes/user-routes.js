@@ -104,7 +104,17 @@ router.post('/removeEmployee', async (req, res) => {
 })
 
 // bulk import 
-
+router.post('/bulkInsert', async (req, res) => {
+    const {users} = req.body;
+    const obj = JSON.parse(users)
+    try {
+        const query = "INSERT INTO users SELECT * FROM json_populate_recordset (NULL::users, $1);"
+        await pool.query(query, [JSON.stringify(obj)]);
+        res.json("Data inserted Successfully!!");
+    } catch (error) {
+        res.send({ error: error.message });
+    }
+})
 
 // bulk export [get]]
 // users will export to backend/download/users.csv

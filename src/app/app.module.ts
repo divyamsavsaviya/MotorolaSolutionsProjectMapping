@@ -5,6 +5,7 @@ import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 // Material component
 import { MatCardModule } from '@angular/material/card';
@@ -83,6 +84,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatAutocompleteModule,
     MatRadioModule,
     MatCheckboxModule,
+    FormsModule
   ],
   providers: [AuthGuard , 
   {

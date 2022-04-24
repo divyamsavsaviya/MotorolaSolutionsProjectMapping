@@ -1,1 +1,19 @@
-<p>dialog-file-upload works!</p>
+<div>
+    <mat-form-field appearance="outline">
+        <div>
+            <mat-toolbar>
+                <input matInput [(ngModel)]="fileAttr" readonly name="name" />
+                <!-- Browse Button -->
+                <button mat-flat-button color="primary">Browse File</button>
+            </mat-toolbar>
+
+            <input appearance="outline" type="file" #fileInput id="uploadFile" (change)="uploadListener($event)"
+                name="uploadFile" multiple="multiple" accept=".csv" />
+        </div>
+    </mat-form-field>
+</div>
+
+<div mat-dialog-actions [align]="'end'">
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-raised-button [disabled]="showUpload" color="primary">Upload</button>
+</div>

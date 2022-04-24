@@ -40,4 +40,8 @@ export class EmployeeDataService {
     console.log(userIds);
     return this.http.post<any>(this.apiURL + '/removeEmployees', userIds);
   }
+
+  bulkInsert(users : any) {
+    return this.http.post<any>(this.apiURL + '/bulkInsert' , {users : users});
+  }
 }
