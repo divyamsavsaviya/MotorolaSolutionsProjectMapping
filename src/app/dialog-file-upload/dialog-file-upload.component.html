@@ -12,8 +12,4 @@
         </div>
     </mat-form-field>
 </div>
-
-<div mat-dialog-actions [align]="'end'">
-    <button mat-button mat-dialog-close>Close</button>
-    <button mat-raised-button [disabled]="showUpload" color="primary">Upload</button>
-</div>
+<mat-progress-bar mode="query" [mode]="showProgressBar ? 'indeterminate' : 'determinate'"></mat-progress-bar>

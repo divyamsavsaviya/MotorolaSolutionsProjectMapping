@@ -41,6 +41,10 @@ export class ProjectManagementComponent implements OnInit {
       data:{
         options: "projects"
       }
+    }).afterClosed().subscribe(val => {
+      if (val === 'bulkInsert') {
+        this.projectTableComponent.getProjects();
+      }
     })
   }
 

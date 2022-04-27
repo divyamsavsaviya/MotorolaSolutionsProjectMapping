@@ -1,7 +1,6 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { EmployeeDataService } from '../services/employee-data.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import * as csvToJson from ('convert-csv-to-json');
+import { MatDialogRef ,MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export class User {
   public email: any;
@@ -16,8 +15,6 @@ export class Project {
   public users: any;
   public product: any;
   public status: any;
-  public createdat: any;
-  public updatedat: any;
   public cieareaid: any;
   public financeproductid: any;
 }
@@ -32,6 +29,7 @@ export class DialogFileUploadComponent implements OnInit {
   @ViewChild('fileInput') fileInput !: ElementRef;
   fileAttr = 'Choose File';
   showUpload = true;
+  showProgressBar = false
 
   public records: any[] = [];
   @ViewChild('csvReader') csvReader: any;
@@ -39,6 +37,7 @@ export class DialogFileUploadComponent implements OnInit {
   constructor(
     private employeeService: EmployeeDataService,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<DialogFileUploadComponent>,
   ) { }
 
   ngOnInit(): void {
@@ -56,6 +55,7 @@ export class DialogFileUploadComponent implements OnInit {
       reader.readAsText(input.files[0]);
 
       reader.onload = () => {
+        this.showProgressBar = !this.showProgressBar;
         let csvData = reader.result;
         let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
         let headersRow = this.getHeaderArray(csvRecordsArray);
@@ -65,6 +65,7 @@ export class DialogFileUploadComponent implements OnInit {
         } else {
           console.log(headersRow);
           this.records = this.getProjectsDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
+          console.log(this.records);
         }
 
         // divide this.records in chunk
@@ -75,9 +76,13 @@ export class DialogFileUploadComponent implements OnInit {
           const chunkJsonData = JSON.stringify(chunk);
           this.employeeService.bulkInsert(chunkJsonData).subscribe({
             next: (res) => {
+              this.showProgressBar = !this.showProgressBar;
+              this.dialogRef.close('bulkInsert');
               console.log(res);
+
             },
             error: (err) => {
+              this.showProgressBar = !this.showProgressBar;
               console.log('error is occurred while inserting chunk !' , chunkJsonData);
             }
           })
@@ -119,26 +124,18 @@ export class DialogFileUploadComponent implements OnInit {
     // console.log(csvRecordsArray);
     for (let i = 1; i < csvRecordsArray.length; i++) {
 
-
-
       let currentRecord = (<string>csvRecordsArray[i]).split(',');
       console.log("currentRecord => ", currentRecord);
       if (currentRecord.length == headerLength) {
         let csvRecord: Project = new Project();
-        csvRecord.projectname = currentRecord[0].trim();
-        csvRecord.deptcode = currentRecord[1].trim();
-
-        
-
-        csvRecord.users = currentRecord[2].trim();
-        csvRecord.product = currentRecord[3].trim();
-        csvRecord.status = currentRecord[4].trim();
-        csvRecord.createdat = currentRecord[5].trim();
-        csvRecord.updatedat = currentRecord[6].trim();
-        csvRecord.cieareaid = currentRecord[7].trim();
-        csvRecord.financeproductid = currentRecord[8].trim();
+        csvRecord.projectname = currentRecord[1].trim();
+        csvRecord.deptcode = currentRecord[2].trim();
+        csvRecord.users = currentRecord[3].trim();
+        csvRecord.product = currentRecord[4].trim();
+        csvRecord.status = currentRecord[5].trim();
+        csvRecord.cieareaid = currentRecord[6].trim();
+        csvRecord.financeproductid = currentRecord[7].trim();
         console.log("csvRecord => ", csvRecord);
-        //encrypt password using bcrypt
         //TODO - validation 
         projects.push(csvRecord);
       }

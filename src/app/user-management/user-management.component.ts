@@ -36,6 +36,10 @@ export class UserManagementComponent implements OnInit {
       data:{
         options:"users"
       }
+    }).afterClosed().subscribe(val => {
+      if (val === 'bulkInsert') {
+        this.userTableComponent.getUsers();
+      }
     })
   }
 

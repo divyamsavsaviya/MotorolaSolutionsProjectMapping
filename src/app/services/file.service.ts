@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as e from 'express';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +24,9 @@ export class FileService {
   }
 
   ConvertToCSV(objArray: any, headerList: any) {
-    // TODO - Handle JSON array
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
     let str = '';
-    let row = 'count,';
+    let row = '';
 
     for (let index in headerList) {
       row += headerList[index] + ',';
@@ -34,11 +34,17 @@ export class FileService {
     row = row.slice(0, -1);
     str += row + '\r\n';
     for (let i = 0; i < array.length; i++) {
-      let line = (i + 1) + '';
+      let line = '';
       for (let index in headerList) {
         let head = headerList[index];
-
-        line += ',' + array[i][head];
+        let value = array[i][head];
+        console.log(i + typeof (value) + value );
+        if (typeof (value) === 'object' && value !== null ) {
+          let users = value.join('#%');
+          line += users+','  ;
+        } else {
+          line += value+ ',' ;
+        }
       }
       str += line + '\r\n';
     }

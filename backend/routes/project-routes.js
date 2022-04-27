@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
         } = req.body;
 
         const projectInsertQuery =
-            'INSERT INTO public.projects( projectname, deptcode, users, status, createdat, updatedat, cieareaid, financeproductid , product) VALUES ($1,$2,$3,$4,$5,Now(),Now(),$6,$7,$8);';
+            'INSERT INTO public.projects(id, projectname, deptcode, users, status, createdat, updatedat, cieareaid, financeproductid , product) VALUES (DEFAULT,$1,$2,$3,$4,Now(),Now(),$5,$6,$7);';
         const newProject = await pool.query(
             projectInsertQuery,
             [projectname, deptcode, users, status, cieareaid, financeproductid, product]);
@@ -127,7 +127,17 @@ router.post('/removeProject', async (req, res) => {
 })
 
 // bulk import 
-
+router.post('/importUsers', async (req, res) => {
+    const {users} = req.body;
+    const obj = JSON.parse(users)
+    try {
+        const query = "INSERT INTO users SELECT * FROM json_populate_recordset (NULL::users, $1);"
+        await pool.query(query, [JSON.stringify(obj)]);
+        res.json("Users inserted Successfully!!");
+    } catch (error) {
+        res.send({ error: error.message });
+    }
+})
 
 // bulk export [get]]
 // projects will export to backend/download/project.csv
