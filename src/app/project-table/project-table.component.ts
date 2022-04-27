@@ -56,7 +56,6 @@ export class ProjectTableComponent implements OnInit {
         this.dataSource = new MatTableDataSource(this.projects);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
-        console.log(res);
       },
       error: (err) => {
         console.log(err.message);

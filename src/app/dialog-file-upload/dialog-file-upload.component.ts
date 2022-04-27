@@ -1,12 +1,25 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { EmployeeDataService } from '../services/employee-data.service';
-
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as csvToJson from ('convert-csv-to-json');
 
 export class User {
   public email: any;
   public password: any;
   public role: any;
   public name: any;
+}
+
+export class Project {
+  public projectname: any;
+  public deptcode: any;
+  public users: any;
+  public product: any;
+  public status: any;
+  public createdat: any;
+  public updatedat: any;
+  public cieareaid: any;
+  public financeproductid: any;
 }
 @Component({
   selector: 'app-dialog-file-upload',
@@ -25,6 +38,7 @@ export class DialogFileUploadComponent implements OnInit {
 
   constructor(
     private employeeService: EmployeeDataService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   ngOnInit(): void {
@@ -46,7 +60,12 @@ export class DialogFileUploadComponent implements OnInit {
         let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
         let headersRow = this.getHeaderArray(csvRecordsArray);
 
-        this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
+        if (this.data.options === 'users') {
+          this.records = this.getUsersDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
+        } else {
+          console.log(headersRow);
+          this.records = this.getProjectsDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
+        }
 
         // divide this.records in chunk
         const chunkSize = 100;
@@ -77,8 +96,8 @@ export class DialogFileUploadComponent implements OnInit {
     }
   }
 
-  getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
-    let csvArr = [];
+  getUsersDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
+    let users = [];
     for (let i = 1; i < csvRecordsArray.length; i++) {
       let currentRecord = (<string>csvRecordsArray[i]).split(',');
       if (currentRecord.length == headerLength) {
@@ -86,12 +105,46 @@ export class DialogFileUploadComponent implements OnInit {
         csvRecord.email = currentRecord[0].trim();
         csvRecord.name = currentRecord[1].trim();
         csvRecord.role = currentRecord[2].trim();
+        csvRecord.password = currentRecord[3].trim();
         //encrypt password using bcrypt
         //TODO - validation 
-        csvArr.push(csvRecord);
+        users.push(csvRecord);
       }
     }
-    return csvArr;
+    return users;
+  }
+
+  getProjectsDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
+    let projects = [];
+    // console.log(csvRecordsArray);
+    for (let i = 1; i < csvRecordsArray.length; i++) {
+
+
+
+      let currentRecord = (<string>csvRecordsArray[i]).split(',');
+      console.log("currentRecord => ", currentRecord);
+      if (currentRecord.length == headerLength) {
+        let csvRecord: Project = new Project();
+        csvRecord.projectname = currentRecord[0].trim();
+        csvRecord.deptcode = currentRecord[1].trim();
+
+        
+
+        csvRecord.users = currentRecord[2].trim();
+        csvRecord.product = currentRecord[3].trim();
+        csvRecord.status = currentRecord[4].trim();
+        csvRecord.createdat = currentRecord[5].trim();
+        csvRecord.updatedat = currentRecord[6].trim();
+        csvRecord.cieareaid = currentRecord[7].trim();
+        csvRecord.financeproductid = currentRecord[8].trim();
+        console.log("csvRecord => ", csvRecord);
+        //encrypt password using bcrypt
+        //TODO - validation 
+        projects.push(csvRecord);
+      }
+    }
+    console.log("projects => ", projects);
+    return projects;
   }
 
   isValidCSVFile(file: any) {

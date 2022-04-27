@@ -42,6 +42,6 @@ export class EmployeeDataService {
   }
 
   bulkInsert(users : any) {
-    return this.http.post<any>(this.apiURL + '/bulkInsert' , {users : users});
+    return this.http.post<any>(this.apiURL + '/importUsers' , {users : users});
   }
 }

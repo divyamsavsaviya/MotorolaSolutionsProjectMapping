@@ -37,7 +37,10 @@ export class ProjectManagementComponent implements OnInit {
 
   openFileUploadDialog() {
     this.dialog.open(DialogFileUploadComponent, {
-      width: '30%'
+      width: '30%',
+      data:{
+        options: "projects"
+      }
     })
   }
 
