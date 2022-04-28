@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
 
         const projectInsertQuery =
             'INSERT INTO public.projects(id, projectname, deptcode, users, status, createdat, updatedat, cieareaid, financeproductid , product) VALUES (DEFAULT,$1,$2,$3,$4,Now(),Now(),$5,$6,$7);';
-        const newProject = await pool.query(
+        await pool.query(
             projectInsertQuery,
             [projectname, deptcode, users, status, cieareaid, financeproductid, product]);
         res.json({ message: "Project Added Successfully!" });
@@ -127,15 +127,24 @@ router.post('/removeProject', async (req, res) => {
 })
 
 // bulk import 
-router.post('/importUsers', async (req, res) => {
-    const {users} = req.body;
-    const obj = JSON.parse(users)
+router.post('/importProjects', async (req, res) => {
+    const {projects} = req.body;
+    const JSONProjects = JSON.parse(projects)
     try {
-        const query = "INSERT INTO users SELECT * FROM json_populate_recordset (NULL::users, $1);"
-        await pool.query(query, [JSON.stringify(obj)]);
-        res.json("Users inserted Successfully!!");
+        JSONProjects.forEach( async project => {
+            const projectInsertQuery =
+            'INSERT INTO public.projects(id, projectname, deptcode, users, status, createdat, updatedat, cieareaid, financeproductid , product) VALUES (DEFAULT,$1,$2,$3,$4,Now(),Now(),$5,$6,$7);';
+            await pool.query(
+                projectInsertQuery,
+                [project.projectname, project.deptcode, project.users, project.status, project.cieareaid, project.financeproductid, project.product]);
+        })
+        res.json({ message: "Projects Added Successfully!" });
     } catch (error) {
-        res.send({ error: error.message });
+        if (error.constraint === 'projects_pkey') {
+            res.status(401).send({ error: "Project already exists!", errorType: 'project_exists' , });
+        } else {
+            res.status(401).send({ error: error.message });
+        }
     }
 })
 
@@ -172,19 +181,6 @@ router.get('/exportProjects', async (req, res) => {
         const fileDirecoty = path.join(__dirname , '../download/');
         const file = path.resolve(fileDirecoty + fileName);
         res.download(file)
-        // //No need for special headers
-        // res.download(file);
-
-        // res.sendFile(fileName, { root: __dirname });
-        // res.send({ dir: __dirname })
-
-        // res.download("download/projects.csv" , fileName, (err) => {
-        //     if (err) {
-        //         res.status(500).send({
-        //             message: "Could not download the file. " + err,
-        //         });
-        //     }
-        // })
 
     } catch (error) {
         res.status(401).send({ error: error.message });

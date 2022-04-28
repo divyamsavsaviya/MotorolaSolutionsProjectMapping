@@ -121,16 +121,16 @@ export class AddProjectDialogComponent implements OnInit {
 
   // currently users and status can be updated
   updateProject() {
+    const id = this.editData.id;
     const users = this.users;
     const status = this.addProjectForm.controls['status'].value;
-
-    // validate data
-    this.projectService.updateProject({users,status}).subscribe ({
+    console.log(users, status);
+    this.projectService.updateProject({ id, users, status }).subscribe({
       next: (res) => {
         this.addProjectForm.reset();
         this.dialogRef.close('update')
       },
-      error : (error) => {
+      error: (error) => {
         console.error(error.message);
       }
     });

@@ -1,6 +1,7 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { EmployeeDataService } from '../services/employee-data.service';
-import { MatDialogRef ,MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ProjectServiceService } from '../services/project-service.service';
 
 export class User {
   public email: any;
@@ -36,6 +37,8 @@ export class DialogFileUploadComponent implements OnInit {
 
   constructor(
     private employeeService: EmployeeDataService,
+    private projectService: ProjectServiceService,
+    // private projectManagementComponent: ProjectManagementComponent,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<DialogFileUploadComponent>,
   ) { }
@@ -59,35 +62,46 @@ export class DialogFileUploadComponent implements OnInit {
         let csvData = reader.result;
         let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
         let headersRow = this.getHeaderArray(csvRecordsArray);
+        // divide this.records in chunk
+        const chunkSize = 100;
 
         if (this.data.options === 'users') {
           this.records = this.getUsersDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
+          for (let i = 0; i < this.records.length; i += chunkSize) {
+            const chunk = this.records.slice(i, i + chunkSize);
+            const chunkJsonData = JSON.stringify(chunk);
+            this.employeeService.bulkInsert(chunkJsonData).subscribe({
+              next: (res) => {
+                this.showProgressBar = !this.showProgressBar;
+                this.dialogRef.close('bulkInsert');
+                console.log(res);
+              },
+              error: (err) => {
+                this.showProgressBar = !this.showProgressBar;
+                console.log('error is occurred while inserting chunk !', err);
+              }
+            })
+          }
         } else {
-          console.log(headersRow);
           this.records = this.getProjectsDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
-          console.log(this.records);
+          console.log({ projects: this.records });
+          for (let i = 0; i < this.records.length; i += chunkSize) {
+            const chunk = this.records.slice(i, i + chunkSize);
+            const chunkJsonData = JSON.stringify(chunk);
+            this.projectService.bulkInsert(chunkJsonData).subscribe({
+              next: (res) => {
+                this.showProgressBar = !this.showProgressBar;
+                this.dialogRef.close('bulkInsert');
+                console.log(res);
+  
+              },
+              error: (err) => {
+                this.showProgressBar = !this.showProgressBar;
+                console.log('error is occurred while inserting chunk !', err);
+              }
+            })
+          }
         }
-
-        // divide this.records in chunk
-        const chunkSize = 100;
-        for (let i = 0; i < this.records.length; i += chunkSize) {
-          const chunk = this.records.slice(i, i + chunkSize);
-          //convert chunk data into json 
-          const chunkJsonData = JSON.stringify(chunk);
-          this.employeeService.bulkInsert(chunkJsonData).subscribe({
-            next: (res) => {
-              this.showProgressBar = !this.showProgressBar;
-              this.dialogRef.close('bulkInsert');
-              console.log(res);
-
-            },
-            error: (err) => {
-              this.showProgressBar = !this.showProgressBar;
-              console.log('error is occurred while inserting chunk !' , chunkJsonData);
-            }
-          })
-        }
-
       };
 
       reader.onerror = function () {
@@ -122,25 +136,20 @@ export class DialogFileUploadComponent implements OnInit {
   getProjectsDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
     let projects = [];
     // console.log(csvRecordsArray);
-    for (let i = 1; i < csvRecordsArray.length; i++) {
-
+    for (let i = 1; i < csvRecordsArray.length - 1; i++) {
       let currentRecord = (<string>csvRecordsArray[i]).split(',');
-      console.log("currentRecord => ", currentRecord);
-      if (currentRecord.length == headerLength) {
-        let csvRecord: Project = new Project();
-        csvRecord.projectname = currentRecord[1].trim();
-        csvRecord.deptcode = currentRecord[2].trim();
-        csvRecord.users = currentRecord[3].trim();
-        csvRecord.product = currentRecord[4].trim();
-        csvRecord.status = currentRecord[5].trim();
-        csvRecord.cieareaid = currentRecord[6].trim();
-        csvRecord.financeproductid = currentRecord[7].trim();
-        console.log("csvRecord => ", csvRecord);
-        //TODO - validation 
-        projects.push(csvRecord);
-      }
+      let csvRecord: Project = new Project();
+      csvRecord.projectname = currentRecord[1].trim();
+      csvRecord.deptcode = currentRecord[2].trim();
+      csvRecord.users = currentRecord[3].trim().split('#%');
+      csvRecord.product = currentRecord[4].trim();
+      csvRecord.status = currentRecord[5].trim();
+      csvRecord.cieareaid = currentRecord[6].trim();
+      csvRecord.financeproductid = currentRecord[7].trim();
+      // console.log("csvRecord => ", csvRecord);
+      //TODO - validation 
+      projects.push(csvRecord);
     }
-    console.log("projects => ", projects);
     return projects;
   }
 

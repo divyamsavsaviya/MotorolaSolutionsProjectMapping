@@ -51,8 +51,12 @@ export class ProjectServiceService {
     return this.http.post<any>(this.apiURL + '/removeProject', project);
   }
 
+  bulkInsert(projects: any) {
+    return this.http.post<any>(this.apiURL + '/importProjects', { projects: projects });
+  }
+
   getExportedProjects() {
     return this.http.get(this.apiURL + '/exportProjects',
-      { observe: 'response', responseType : 'blob' });
+      { observe: 'response', responseType: 'blob' });
   }
 }

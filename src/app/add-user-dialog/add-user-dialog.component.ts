@@ -63,10 +63,12 @@ export class AddUserDialogComponent implements OnInit {
   addUser() {
     if (!this.editData) {
       if (this.addUserForm.valid) {
-        this.employeeService.addEmployee(this.addUserForm.value).subscribe({
+        const {name ,email ,role , password } = this.addUserForm.value;
+        this.employeeService.addEmployee({name ,email ,role , password }).subscribe({
           next: (res) => {
             console.log("Added Successfully");
             this.dialogRef.close('add');
+            console.log(res.message);
           },
           error: (error) => {
             console.log(error.message);
@@ -81,7 +83,6 @@ export class AddUserDialogComponent implements OnInit {
   updateUserRole() {
     const id = this.addUserForm.controls['id'].value;
     const role = this.addUserForm.controls['role'].value;
-
     // validate role !== oldRole
     this.employeeService.updateEmployeeRole({ id, role }).subscribe({
       next: (res) => {

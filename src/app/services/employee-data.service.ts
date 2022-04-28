@@ -19,8 +19,8 @@ export class EmployeeDataService {
     return this.http.get<any>(this.apiURL);
   }
 
-  addEmployee(employee: any) {
-    return this.http.post<any>(this.apiURL + '/', employee);
+  addEmployee({name ,email ,role , password }: any) {
+    return this.http.post<any>(this.apiURL + '/', {name ,email ,role , password });
   }
 
   updateEmployeeRole({ id, role }: any) {
@@ -38,7 +38,7 @@ export class EmployeeDataService {
 
   removeEmployees(userIds: any) {
     console.log(userIds);
-    return this.http.post<any>(this.apiURL + '/removeEmployees', userIds);
+    return this.http.post<any>(this.apiURL + '/removeEmployees', {userIds : userIds});
   }
 
   bulkInsert(users : any) {

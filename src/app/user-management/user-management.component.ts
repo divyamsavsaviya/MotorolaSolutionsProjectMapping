@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddUserDialogComponent } from '../add-user-dialog/add-user-dialog.component';
 import { DialogFileUploadComponent } from '../dialog-file-upload/dialog-file-upload.component';
-import { EmployeeDataService } from '../services/employee-data.service';
 import { UserTableComponent } from '../user-table/user-table.component';
 
 @Component({

@@ -106,6 +106,7 @@ export class UserTableComponent implements OnInit {
     this.employeeService.removeEmployees(usersIDs).subscribe({
       next: (res) => {
         this.getUsers();
+        console.log(res.message);
       },
       error: (err) => {
         console.log(err.message);

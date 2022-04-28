@@ -38,7 +38,6 @@ export class FileService {
       for (let index in headerList) {
         let head = headerList[index];
         let value = array[i][head];
-        console.log(i + typeof (value) + value );
         if (typeof (value) === 'object' && value !== null ) {
           let users = value.join('#%');
           line += users+','  ;

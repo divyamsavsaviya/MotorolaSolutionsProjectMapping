@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
         const { email, password, name, role } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
         const newEmployee = await pool.query(
-            'INSERT INTO public.users (email, password, name , role) VALUES ($1,$2,$3,$4) RETURNING *',
+            'INSERT INTO public.users (id , email, password, name , role) VALUES (DEFAULT ,$1,$2,$3,$4)',
             [email, hashedPassword, name, role]);
         res.json({ employees: newEmployee.rows[0] });
     } catch (error) {
@@ -105,7 +105,31 @@ router.post('/removeEmployee', async (req, res) => {
 
 // bulk import 
 router.post('/importUsers', async (req, res) => {
-    const {users} = req.body;
+    const { users } = req.body;
+    const JSONUsers = JSON.parse(users)
+    try {
+        JSONUsers.forEach(async user => {
+            console.log("user => ", user);
+            const hashedPassword = await bcrypt.hash(user.password, 10);
+            const userInsertQuery =
+                'INSERT INTO public.users (email, password, name , role,id) VALUES ($1,$2,$3,$4,DEFAULT)';
+            await pool.query(
+                userInsertQuery,
+                [user.email, hashedPassword, user.name, user.role]);
+        })
+        res.json({ message: "Users Added Successfully!" });
+    } catch (error) {
+        if (error.constraint === 'employees_pkey') {
+            res.status(400).send({ error: "Users already exists!", errorType: 'user_exists', });
+        } else {
+            res.status(400).send({ error: error.message });
+        }
+    }
+})
+
+router.post('/importUsers', async (req, res) => {
+    const { users } = req.body;
+    console.log(users);
     const obj = JSON.parse(users)
     try {
         const query = "INSERT INTO users SELECT * FROM json_populate_recordset (NULL::users, $1);"
@@ -117,7 +141,6 @@ router.post('/importUsers', async (req, res) => {
 })
 
 // bulk export [get]]
-// users will export to backend/download/users.csv
 router.get('/exportEmployees', async (req, res) => {
     try {
         const getProjectsQuery =
@@ -141,7 +164,7 @@ router.get('/exportEmployees', async (req, res) => {
             console.log("Write to users.csv successfully!"),
         );
 
-        res.download("/users.csv" , fileName, (err) => {
+        res.download("/users.csv", fileName, (err) => {
             if (err) {
                 res.status(500).send({
                     message: "Could not download the file. " + err,
@@ -157,13 +180,19 @@ router.get('/exportEmployees', async (req, res) => {
 
 // remove bulk users
 router.post('/removeEmployees', async (req, res) => {
-    userIds = req.body
-    // console.log(any(STRING_TO_ARRAY(userIds)));
+    const { userIds } = req.body;
+    console.log(userIds);
+    let deletedIds = [];
     try {
-        await pool.query('DELETE FROM public.users WHERE id= any(STRING_TO_ARRAY($1,','));', [userIds]);
-        res.json("Removed Employees Successfully!");
+        userIds.forEach(async id => {
+            await pool.query('DELETE FROM public.users WHERE id=($1);', [id]);
+            deletedIds.push(id);
+        })
+        res.json({ message: "Removed Users with ids - " + deletedIds.join(",") + " Successfully!" });
     } catch (error) {
-        res.send({ error: error.message });
+        if (error.constraint === 'employees_pkey') {
+            res.status(500).send({ error: error.message });
+        }
     }
 })
 
