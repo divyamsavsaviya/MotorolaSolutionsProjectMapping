@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ProjectServiceService } from '../services/project-service.service';
@@ -29,6 +30,7 @@ export class AddProjectDialogComponent implements OnInit {
     private projectService: ProjectServiceService,
     private dialogRef: MatDialogRef<AddProjectDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public editData: any,
+    private router: Router,
   ) {
     this.filteredUsers = this.userCtrl.valueChanges.pipe(
       startWith(null),
@@ -107,11 +109,15 @@ export class AddProjectDialogComponent implements OnInit {
       console.log(this.addProjectForm.value);
       this.projectService.addProject(this.addProjectForm.value).subscribe({
         next: (res) => {
+          console.log(res);
           console.log("Project Added Successfully")
           this.dialogRef.close('add');
         },
-        error: (err) => {
-          console.log(err);
+        error: (error) => {
+          console.log(error);
+          if(error.status === 401) {
+            this.router.navigate(['/login'])
+          }
         }
       })
     } else {
@@ -131,6 +137,9 @@ export class AddProjectDialogComponent implements OnInit {
         this.dialogRef.close('update')
       },
       error: (error) => {
+        if(error.status === 401) {
+          this.router.navigate(['/login'])
+        }
         console.error(error.message);
       }
     });

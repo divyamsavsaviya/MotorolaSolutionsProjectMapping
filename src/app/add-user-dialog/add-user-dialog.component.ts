@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Router } from '@angular/router';
 import { EmployeeDataService } from '../services/employee-data.service';
 
 @Component({
@@ -16,10 +17,12 @@ export class AddUserDialogComponent implements OnInit {
   disableEmail: boolean = false;
   hide: boolean = true;
   disable: boolean = true;
+  id: any;
   constructor(
     private formBuilder: FormBuilder,
     private employeeService: EmployeeDataService,
     @Inject(MAT_DIALOG_DATA) public editData: any,
+    private router: Router,
     private dialogRef: MatDialogRef<AddUserDialogComponent>) { }
 
   addUserForm !: FormGroup;
@@ -33,6 +36,7 @@ export class AddUserDialogComponent implements OnInit {
     });
 
     if (this.editData) {
+      this.id = this.editData.id;
       this.showPassword = true;
       this.disableEmail = true;
       this.actionTitle = "Update User";
@@ -61,10 +65,11 @@ export class AddUserDialogComponent implements OnInit {
   ];
 
   addUser() {
+    console.log(this.addUserForm.value);
     if (!this.editData) {
       if (this.addUserForm.valid) {
-        const {name ,email ,role , password } = this.addUserForm.value;
-        this.employeeService.addEmployee({name ,email ,role , password }).subscribe({
+        const { name, email, role, password } = this.addUserForm.value;
+        this.employeeService.addEmployee({ name, email, role, password }).subscribe({
           next: (res) => {
             console.log("Added Successfully");
             this.dialogRef.close('add');
@@ -72,6 +77,9 @@ export class AddUserDialogComponent implements OnInit {
           },
           error: (error) => {
             console.log(error.message);
+            if(error.status === 401) {
+              this.router.navigate(['/login'])
+            }
           }
         });
       }
@@ -81,18 +89,21 @@ export class AddUserDialogComponent implements OnInit {
   }
 
   updateUserRole() {
-    const id = this.addUserForm.controls['id'].value;
+    const id = this.id;
     const role = this.addUserForm.controls['role'].value;
-    // validate role !== oldRole
+    console.log(id, role);
     this.employeeService.updateEmployeeRole({ id, role }).subscribe({
       next: (res) => {
         this.addUserForm.reset();
         this.dialogRef.close('update');
+        console.log(res.message);
       },
       error: (error) => {
-        console.error(error.message);
+        if(error.status === 401) {
+          this.router.navigate(['/login'])
+        }
       }
     })
-
   }
 }
+

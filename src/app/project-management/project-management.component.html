@@ -2,20 +2,26 @@
   <h3>Project Management</h3>
   <span class="example-spacer"></span>
   <div *ngIf="this.role == 'Admin'">
-    <button mat-raised-button (click)="openAddProjectDialog()">
+    <button mat-raised-button class="toolbar-btn" (click)="openAddProjectDialog()">
       <mat-icon>receipt</mat-icon> Add Project
     </button>
   </div>
 
   <div *ngIf="this.role == 'Admin'">
-    <button mat-raised-button style="margin-left: 10px;" (click)="openFileUploadDialog()">
+    <button mat-raised-button class="toolbar-btn" (click)="openFileUploadDialog()">
       <mat-icon>upload_file </mat-icon> Import Projects
     </button>
   </div>
 
   <div *ngIf="this.role == 'Admin'">
-    <button mat-raised-button style="margin-left: 10px;" (click)="exportProject()">
+    <button mat-raised-button class="toolbar-btn" (click)="exportProject()">
       <mat-icon>file_download </mat-icon> Export Projects
+    </button>
+  </div>
+
+  <div *ngIf="this.role == 'Admin'">
+    <button mat-raised-button class="toolbar-btn" class="toolbar-btn" (click)="bulkRemove()">
+      <mat-icon>delete </mat-icon> Bulk Remove
     </button>
   </div>
 

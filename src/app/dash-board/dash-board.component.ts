@@ -36,9 +36,14 @@ export class DashBoardComponent implements OnInit {
 
   getEmployeeInformation() {
     const email = this.payloadService.getEmployeeEmail();
-    this.employeeService.getEmployeData(email).subscribe({
+    this.employeeService.getEmployeeData(email).subscribe({
       next:(res) => {
         console.log(res);
+      },
+      error:(err) => {
+        if(err.status === 401) {
+          this.router.navigate(['/login'])
+        }
       }
     }
     )

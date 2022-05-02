@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as e from 'express';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +7,6 @@ export class FileService {
 
   constructor() { }
 
-  // pass data , file name , headers =  ['name','age', 'average', 'approved', 'description']
   downloadFile(data: any, filename = 'data', headerList: any) {
     let csvData = this.ConvertToCSV(data, headerList);
     // A Blob object represents a file-like object of immutable, raw data.
@@ -45,6 +43,7 @@ export class FileService {
           line += value+ ',' ;
         }
       }
+      line = line.slice(0,-1);
       str += line + '\r\n';
     }
     return str;

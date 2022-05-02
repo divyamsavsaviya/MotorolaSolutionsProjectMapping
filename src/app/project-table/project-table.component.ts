@@ -1,8 +1,10 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dialog.component';
 import { FileService } from '../services/file.service';
 import { PayloadService } from '../services/payload.service';
@@ -31,9 +33,10 @@ export class ProjectTableComponent implements OnInit {
     private dialog: MatDialog,
     private payloadService: PayloadService,
     private fileService: FileService,
+    private router: Router
   ) { }
 
-  displayedColumns: string[] = ['id', 'projectname', 'deptcode', 'users', 'product', 'status', 'cieareaid', 'financeproductid', 'actions'];
+  displayedColumns: string[] = ['select','id', 'projectname', 'deptcode', 'users', 'product', 'status', 'cieareaid', 'financeproductid', 'actions'];
   dataSource !: MatTableDataSource<Project>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -58,6 +61,9 @@ export class ProjectTableComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
       },
       error: (err) => {
+        if(err.status === 401) {
+          this.router.navigate(['/login'])
+        }
         console.log(err.message);
       }
     })
@@ -69,6 +75,21 @@ export class ProjectTableComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  selection = new SelectionModel<Project>(true, []);
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   editProject(project: any) {
@@ -85,12 +106,32 @@ export class ProjectTableComponent implements OnInit {
   removeProject(project: any) {
     this.projectService.removeProject(project).subscribe({
       next: (res) => {
-        console.log(res);
         this.getProjects();
+        console.log(res.message);
       },
-      error: (error) => {
-        console.log(error.message);
+      error: (err) => {
+        if(err.status === 401) {
+          this.router.navigate(['/login'])
+        }
+        console.log(err.message);
+      }
+    })
+  }
 
+  removeProjects() {
+    const projectIDs = this.selection.selected.map((projectData) => {
+      return projectData.id;
+    });
+    this.projectService.removeProjects(projectIDs).subscribe({
+      next: (res) => {
+        this.getProjects();
+        console.log(res.message);
+      },
+      error: (err) => {
+        if(err.status === 401) {
+          this.router.navigate(['/login'])
+        }
+        console.log(err.message);
       }
     })
   }

@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddUserDialogComponent } from '../add-user-dialog/add-user-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FileService } from '../services/file.service';
+import { Router } from '@angular/router';
 
 export interface Employee {
   id: number;
@@ -26,6 +27,7 @@ export class UserTableComponent implements OnInit {
     private employeeService: EmployeeDataService,
     private dialog: MatDialog,
     private fileService: FileService,
+    private router: Router
   ) { }
 
   displayedColumns: string[] = ['select', 'id', 'email', 'name', 'role', 'actions'];
@@ -59,6 +61,9 @@ export class UserTableComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
       },
       error: (err) => {
+        if(err.status === 401) {
+          this.router.navigate(['/login'])
+        }
         console.log(err.message);
       }
     })
@@ -71,6 +76,9 @@ export class UserTableComponent implements OnInit {
         this.getUsers();
       },
       error: (err) => {
+        if(err.status === 401) {
+          this.router.navigate(['/login'])
+        }
         console.log(err.message);
       }
     })
@@ -109,6 +117,9 @@ export class UserTableComponent implements OnInit {
         console.log(res.message);
       },
       error: (err) => {
+        if(err.status === 401) {
+          this.router.navigate(['/login'])
+        }
         console.log(err.message);
       }
     })

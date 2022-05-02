@@ -7,7 +7,7 @@ const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 const router = express.Router()
 
 // Add employee
-router.post('/', async (req, res) => {
+router.post('/',authenticateToken, async (req, res) => {
     try {
         const { email, password, name, role } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -17,22 +17,22 @@ router.post('/', async (req, res) => {
         res.json({ employees: newEmployee.rows[0] });
     } catch (error) {
         if (error.constraint === 'employees_pkey') {
-            res.status(401).send({ error: "User already exists!", errorType: 'user_exists' });
+            res.json({ error: "User already exists!", errorType: 'user_exists' });
             console.log(error.message);
         } else {
-            res.status(401).send({ error: error.message });
+            res.json({ error: error.message });
         }
     }
 })
 
 // get employees list
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
     try {
         employees = await pool.query('SELECT id, email, name, role FROM public.users;');
         if (employees.rows.length === 0) return res.json({ message: 'No users Found' });
         res.json({ employees: employees.rows });
     } catch (error) {
-        res.status(500).send({ error: error.message });
+        res.json({ error: error.message });
     }
 })
 
@@ -44,12 +44,12 @@ router.get('/getEmployeeInformation', authenticateToken, async (req, res) => {
         const employee = await pool.query('SELECT email, name, role FROM public.users WHERE id=($1)',
             [id]);
         if (employee.rows.length === 1) {
-            return res.json(employee.rows[0]);
+            res.json(employee.rows[0]);
         } else {
-            res.status(400).json({ message: "User Not exists!" });
+            res.json({ message: "User Not exists!" });
         }
     } catch (error) {
-        res.send({ error: error.message });
+        res.json({ error: error.message });
     }
 })
 
@@ -61,22 +61,23 @@ router.put('/updateEmail', authenticateToken, async (req, res) => {
             [email, id]);
     } catch (error) {
         if (error.constraint === 'employees_pkey') {
-            res.status(401).send({ error: "User exists with email " + email, errorType: 'invalid_email' });
+            res.json({ error: "User exists with email " + email, errorType: 'invalid_email' });
         } else {
-            res.status(401).send({ error: error.message });
+            res.json({ error: error.message });
         }
     }
 })
 
 // updates employee role
-router.put('/updateRole', async (req, res) => {
+router.put('/updateRole',authenticateToken, async (req, res) => {
     const { role, id } = req.body;
+    console.log(id ,role);
     try {
         employee = await pool.query('UPDATE public.users SET role=($1) WHERE id=($2);',
             [role, id]);
-        res.json("Role Updated Successfully!");
+        res.json("Role Updated Successfully! for id => " + id + " to " + role);
     } catch (error) {
-        res.send({ error: error.message });
+        res.json({ error: error.message });
     }
 })
 
@@ -88,23 +89,23 @@ router.put('/updateName', authenticateToken, async (req, res) => {
             [name, id]);
         res.json("Name Updated Successfully!");
     } catch (error) {
-        res.send({ error: error.message });
+        res.json({ error: error.message });
     }
 })
 
 // removes employee
-router.post('/removeEmployee', async (req, res) => {
+router.post('/removeEmployee',authenticateToken, async (req, res) => {
     const { id } = req.body;
     try {
         await pool.query('DELETE FROM public.users WHERE id=$1;', [id]);
         res.json("Removed Employee Successfully!");
     } catch (error) {
-        res.send({ error: error.message });
+        res.json({ error: error.message });
     }
 })
 
 // bulk import 
-router.post('/importUsers', async (req, res) => {
+router.post('/importUsers', authenticateToken,async (req, res) => {
     const { users } = req.body;
     const JSONUsers = JSON.parse(users)
     try {
@@ -117,31 +118,18 @@ router.post('/importUsers', async (req, res) => {
                 userInsertQuery,
                 [user.email, hashedPassword, user.name, user.role]);
         })
-        res.json({ message: "Users Added Successfully!" });
+        res.json({ message: "Users Added Successfully!", success: true });
     } catch (error) {
         if (error.constraint === 'employees_pkey') {
-            res.status(400).send({ error: "Users already exists!", errorType: 'user_exists', });
+            res.json({ error: "Users already exists!", errorType: 'user_exists', });
         } else {
-            res.status(400).send({ error: error.message });
+            res.json({ error: error.message });
         }
     }
 })
 
-router.post('/importUsers', async (req, res) => {
-    const { users } = req.body;
-    console.log(users);
-    const obj = JSON.parse(users)
-    try {
-        const query = "INSERT INTO users SELECT * FROM json_populate_recordset (NULL::users, $1);"
-        await pool.query(query, [JSON.stringify(obj)]);
-        res.json("Users inserted Successfully!!");
-    } catch (error) {
-        res.send({ error: error.message });
-    }
-})
-
 // bulk export [get]]
-router.get('/exportEmployees', async (req, res) => {
+router.get('/exportEmployees',authenticateToken, async (req, res) => {
     try {
         const getProjectsQuery =
             "select * from users";
@@ -173,13 +161,12 @@ router.get('/exportEmployees', async (req, res) => {
         })
 
     } catch (error) {
-        res.status(401).send({ error: error.message });
+        res.json({ error: error.message });
     }
 })
 
-
 // remove bulk users
-router.post('/removeEmployees', async (req, res) => {
+router.post('/removeEmployees', authenticateToken ,async (req, res) => {
     const { userIds } = req.body;
     console.log(userIds);
     let deletedIds = [];
@@ -190,9 +177,7 @@ router.post('/removeEmployees', async (req, res) => {
         })
         res.json({ message: "Removed Users with ids - " + deletedIds.join(",") + " Successfully!" });
     } catch (error) {
-        if (error.constraint === 'employees_pkey') {
-            res.status(500).send({ error: error.message });
-        }
+        res.json({ error: error.message });
     }
 })
 

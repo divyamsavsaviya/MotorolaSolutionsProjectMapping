@@ -11,7 +11,7 @@ export class EmployeeDataService {
     private http: HttpClient,
   ) { }
 
-  getEmployeData(email: any) {
+  getEmployeeData(email: any) {
     return this.http.post<any>(this.apiURL + '/getEmployeeInformation', email);
   }
 

@@ -51,4 +51,8 @@ export class ProjectManagementComponent implements OnInit {
   exportProject() {
     this.projectTableComponent.exportProjects();
   }
+
+  bulkRemove() {
+    this.projectTableComponent.removeProjects();
+  }
 }
